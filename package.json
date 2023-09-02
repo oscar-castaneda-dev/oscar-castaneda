@@ -10,6 +10,18 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^1.0.0",
+    "@astrojs/rss": "^3.0.0",
+    "@astrojs/sitemap": "^3.0.0",
     "astro": "^3.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "eslint-plugin-astro": "^0.29.0",
+    "postcss": "^8.4.29",
+    "postcss-preset-env": "^9.1.2",
+    "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.0",
+    "sass": "^1.66.1"
   }
 }
