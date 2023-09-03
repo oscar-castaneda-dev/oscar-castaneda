@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Main from "@components/Main.astro";
+
+export const getStaticPaths = async () => {
+  const posts = await getCollection("posts");
+
+  const paths = posts.map(post => {
+    return {
+      params: {
+        slug: post.slug,
+      },
+      props: {
+        post,
+      },
+    };
+  });
+
+  return paths;
+};
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout description={post.data.excerpt} title={`${post.data.title} | Oscar Castaneda`}>
+  <Main>
+    <h1 class="text-6xl text-teal-900 font-bold mb-5">{post.data.title}</h1>
+    <Image
+      src={post.data.image}
+      alt={post.data.title}
+      width={1024}
+      height={1024 / 2}
+      format="webp"
+      class="rounded-2xl shadow-xl mb-28 object-cover"
+    />
+    <div class="prose prose-2xl overflow-visible relative mb-20">
+      <Content />
+    </div>
+  </Main>
+</Layout>
