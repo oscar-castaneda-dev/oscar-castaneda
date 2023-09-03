@@ -33,7 +33,7 @@ module.exports = {
         "no-use-before-define": "error",
         "func-names": "error",
         "no-shadow": "error",
-        "id-length": ["error", { min: 3 }],
+        "id-length": ["error", { min: 2 }],
       },
     },
     {
