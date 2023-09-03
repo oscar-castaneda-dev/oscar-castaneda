@@ -1,0 +1,3 @@
+{
+  "*.{astro,html,js,jsx,svelte,ts,tsx,vue}": ["eslint --max-warnings 0"]
+}

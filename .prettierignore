@@ -1,0 +1,15 @@
+# Ignore everything
+/*
+
+# Except these files & folders
+!/src
+!/public
+!/.github
+!tsconfig.json
+!astro.config.mjs
+!package.json
+!.prettierrc.cjs
+!.eslintrc.cjs
+!README.md
+!commitlint.config.cjs
+!tailwind.config.cjs
