@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+
+import Main from "@components/Main.astro";
+import Layout from "@layouts/Layout.astro";
+import PostList from "@components/posts/PostList.astro";
+
+const posts = await getCollection("posts");
+---
+
+<Layout
+  title="Daily Blog | Oscar Castaneda"
+  description="Daily blog of Oscar Castaneda. Daily posts about my work as a web developer."
+>
+  <Main>
+    <h1 class="text-6xl text-teal-900 font-bold mb-5">Blog</h1>
+    <div class="mb-32">
+      <PostList {posts} />
+    </div>
+  </Main>
+</Layout>
