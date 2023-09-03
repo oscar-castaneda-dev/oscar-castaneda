@@ -8,7 +8,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier -w .",
+    "lint:eslint": "eslint . --ext ..astro,.ts",
+    "commit": "cz"
   },
   "dependencies": {
     "@astrojs/mdx": "^1.0.0",
