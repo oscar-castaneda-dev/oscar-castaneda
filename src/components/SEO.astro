@@ -1,0 +1,43 @@
+---
+import { SITE } from "@constants";
+
+interface Props {
+  author?: string;
+  coverImage?: string;
+  description?: string;
+  url?: string;
+  title?: string;
+}
+
+const {
+  author = SITE.author,
+  coverImage = SITE.coverImage,
+  description = SITE.description,
+  url = new URL(Astro.url.pathname, Astro.site).href,
+  title = SITE.title,
+} = Astro.props;
+
+const imageURL = new URL(coverImage ? coverImage : SITE.coverImage, Astro.url.origin).href;
+---
+
+<!-- General Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="author" content={author} />
+<meta name="viewport" content="width=device-width" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={imageURL} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={imageURL} />
