@@ -4,7 +4,7 @@
     "baseUrl": "src",
     "paths": {
       "@components/*": ["components/*"],
-      "@constants": ["consts.ts"],
+      "@constants": ["constants.ts"],
       "@content/*": ["content/*"],
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
