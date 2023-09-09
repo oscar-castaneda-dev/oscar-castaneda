@@ -8,8 +8,12 @@ interface Props {
 }
 
 const { posts } = Astro.props;
+const sortedPosts: CollectionEntry<"posts">[] = posts.sort(
+  // eslint-disable-next-line id-length
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
 ---
 
 <div class="grid grid-cols-2 gap-x-16 gap-y-32 max-md:grid-cols-1 max-sm:gap-y-14">
-  {posts.map(post => <Post {post} />)}
+  {sortedPosts.map(post => <Post {post} />)}
 </div>
