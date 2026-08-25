@@ -1,47 +1,65 @@
 ---
 import { getLangFromUrl, localizedPath, useTranslations } from '@/i18n/utils';
 import LanguagePicker from './LanguagePicker.astro';
+import MobileMenu from './MobileMenu.astro';
 import ThemePicker from './ThemePicker.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const links = [
-	{ href: localizedPath(lang), label: t('nav.home') },
 	{ href: localizedPath(lang, 'about'), label: t('nav.about') },
 	{ href: localizedPath(lang, 'blog'), label: t('nav.blog') },
 	{ href: localizedPath(lang, 'daily'), label: t('nav.daily') },
+	{ href: localizedPath(lang, 'work'), label: t('nav.work') },
 ];
 
 const current = Astro.url.pathname;
 ---
 
-<header class="border-b border-gray-200 dark:border-gray-800">
-	<div class="mx-auto flex max-w-2xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4">
+<header class="border-b border-border">
+	{/* items-stretch so the picker cells can run the full height of the bar. */}
+	<div class="container flex items-stretch justify-between">
+		{/* The logo is the home link: `[ OC ]`, brackets drawn by CSS so they stay out of the DOM text. */}
 		<a
 			href={localizedPath(lang)}
-			class="font-semibold tracking-tight hover:text-blue-600 dark:hover:text-blue-400"
+			aria-label={t('nav.home')}
+			class="group flex items-center py-6 font-nothing-code text-title before:content-['[_'] after:content-['_]']"
 		>
-			{t('site.name')}
+			<span class="relative inline-block uppercase">
+				oc
+				{/* A border that fades in, rather than `underline`: no layout shift, no reflow on hover. */}
+				<span
+					class="absolute bottom-0 left-0 w-full border-b border-title opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+				></span>
+			</span>
 		</a>
 
-		<nav class="flex items-center gap-4 text-sm">
-			{
-				links.map(({ href, label }) => (
-					<a
-						href={href}
-						aria-current={current === href ? 'page' : undefined}
-						class="text-gray-600 hover:text-gray-900 aria-[current=page]:font-medium aria-[current=page]:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 dark:aria-[current=page]:text-gray-100"
-					>
-						{label}
-					</a>
-				))
-			}
-		</nav>
+		<div class="flex items-stretch">
+			<nav class="hidden items-center gap-6 py-6 pe-6 md:flex md:gap-8 md:pe-8">
+				{
+					links.map(({ href, label }) => (
+						<a
+							href={href}
+							aria-current={current === href ? 'page' : undefined}
+							class:list={[
+								'font-nothing-subtitle transition-colors duration-150',
+								current === href ? 'text-accent' : 'text-title hover:underline',
+							]}
+						>
+							/{label}
+						</a>
+					))
+				}
+			</nav>
 
-		<div class="ms-auto flex items-center gap-2">
+			{/* No gap: the dividers on each cell do the separating. */}
 			<LanguagePicker />
 			<ThemePicker />
+
+			<div class="flex items-center ps-4 md:hidden">
+				<MobileMenu links={links} />
+			</div>
 		</div>
 	</div>
 </header>

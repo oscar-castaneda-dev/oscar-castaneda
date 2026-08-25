@@ -11,23 +11,27 @@ const modes = [
 ] as const;
 ---
 
-<details class="theme-picker relative" data-dropdown>
+<details class="theme-picker relative flex" data-dropdown>
 	<summary
 		aria-label={t('theme.label')}
-		class="nd-label flex h-9 min-w-[7ch] cursor-pointer list-none items-center justify-center rounded border border-outline px-3 text-caption transition-colors duration-150 hover:text-body"
+		class="group font-nothing-subtitle flex cursor-pointer list-none items-center gap-2 border-s border-border px-4 text-caption transition-colors duration-150 md:px-6"
 	>
+		{/* On a phone the value alone carries the cell; the field name would crowd it. */}
+		<span class="hidden sm:inline">{t('theme.label')}</span>
 		{/* All three ship in the markup; CSS shows the one `data-theme` names. */}
-		{modes.map(({ mode, label }) => <span class:list={['state', `state-${mode}`]}>{label}</span>)}
+		<span class="min-w-[7ch] font-bold text-title">
+			{modes.map(({ mode, label }) => <span class:list={['state', `state-${mode}`]}>{label}</span>)}
+		</span>
 	</summary>
 
-	<ul class="absolute end-0 z-10 mt-2 min-w-40 rounded-lg border border-outline bg-raised py-1">
+	<ul class="absolute end-0 top-full z-10 min-w-40 border border-outline bg-raised py-1">
 		{
 			modes.map(({ mode, label }) => (
 				<li>
 					<button
 						type="button"
 						data-mode={mode}
-						class="option nd-label flex min-h-11 w-full cursor-pointer items-center border-s-2 border-transparent px-4 text-start text-caption transition-colors duration-150 hover:text-body"
+						class="option font-nothing-subtitle flex min-h-11 w-full cursor-pointer items-center border-s-2 border-transparent px-4 text-start text-caption transition-colors duration-150 hover:text-body"
 					>
 						{label}
 					</button>

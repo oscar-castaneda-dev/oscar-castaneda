@@ -13,7 +13,8 @@ const t = useTranslations(lang);
 ---
 
 <Layout title={title} description={description} image={heroImage}>
-	<article>
+	{/* The page rail is wide; a column of prose is not. The measure stops here. */}
+	<article class="mx-auto max-w-2xl">
 		{
 			heroImage && (
 				<Image
@@ -21,18 +22,18 @@ const t = useTranslations(lang);
 					height={510}
 					src={heroImage}
 					alt=""
-					class="mb-8 aspect-2/1 w-full rounded-lg object-cover"
+					class="mb-12 aspect-2/1 w-full rounded-xl object-cover"
 				/>
 			)
 		}
 
-		<header class="border-b border-gray-200 pb-6 dark:border-gray-800">
-			<h1 class="text-3xl font-bold tracking-tight">{title}</h1>
-			<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+		<header class="border-b border-border pb-6">
+			<h1 class="heading-44">{title}</h1>
+			<p class="mt-6 font-nothing-subtitle text-xs text-caption">
 				<FormattedDate date={pubDate} />
 				{
 					updatedDate && (
-						<span class="italic">
+						<span>
 							{' · '}
 							{t('blog.updatedOn')} <FormattedDate date={updatedDate} />
 						</span>
@@ -41,8 +42,13 @@ const t = useTranslations(lang);
 			</p>
 		</header>
 
-		{/* `prose` styles the Markdown body, which Tailwind's reset would otherwise strip bare. */}
-		<div class="prose prose-gray dark:prose-invert mt-8 max-w-none">
+		{/*
+		  `prose` styles the Markdown body, which Tailwind's reset would otherwise
+		  strip bare. Tie it to the tokens rather than to the plugin's own greys.
+		*/}
+		<div
+			class="prose prose-neutral dark:prose-invert prose-headings:font-nothing-dots prose-headings:tracking-[-0.02em] prose-a:text-action prose-a:no-underline hover:prose-a:underline mt-8 max-w-none"
+		>
 			<slot />
 		</div>
 	</article>

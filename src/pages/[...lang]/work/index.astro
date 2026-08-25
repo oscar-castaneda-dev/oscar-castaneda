@@ -1,0 +1,71 @@
+---
+import FormattedDate from '@/components/shared/FormattedDate.astro';
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl, getLangStaticPaths, useTranslations } from '@/i18n/utils';
+import { getLocalizedEntries } from '@/lib/content';
+
+export const getStaticPaths = getLangStaticPaths;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const projects = await getLocalizedEntries('work', lang);
+---
+
+<Layout title={`${t('work.title')} | ${t('site.title')}`} description={t('work.description')}>
+	<div class="mx-auto max-w-2xl">
+		<h1 class="heading-44">{t('work.title')}</h1>
+		<p class="mt-6 text-body">{t('work.description')}</p>
+
+		{
+			projects.length > 0 ? (
+				/* Green is the building territory — one tint for the whole page. */
+				<ul class="mt-16 space-y-4">
+					{projects.map(({ data }) => (
+						<li class="rounded-xl border border-green-border bg-green-surface p-6">
+							<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+								<h2 class="text-lg text-title">{data.title}</h2>
+								<span class="font-nothing-subtitle text-xs text-caption">
+									<FormattedDate date={data.pubDate} />
+								</span>
+							</div>
+
+							{data.role && (
+								<p class="mt-1 font-nothing-subtitle text-xs text-green-muted">{data.role}</p>
+							)}
+
+							<p class="mt-4 text-body">{data.description}</p>
+
+							{data.stack.length > 0 && (
+								<ul class="mt-6 flex flex-wrap gap-2">
+									{data.stack.map((item) => (
+										<li class="rounded border border-green-border px-3 py-1 font-nothing-subtitle text-xs text-caption">
+											{item}
+										</li>
+									))}
+								</ul>
+							)}
+
+							{(data.url || data.repo) && (
+								<p class="mt-6 flex flex-wrap gap-x-6 font-nothing-subtitle text-xs">
+									{data.url && (
+										<a class="text-action hover:underline" href={data.url}>
+											[ {t('work.visit')} ]
+										</a>
+									)}
+									{data.repo && (
+										<a class="text-action hover:underline" href={data.repo}>
+											[ {t('work.repo')} ]
+										</a>
+									)}
+								</p>
+							)}
+						</li>
+					))}
+				</ul>
+			) : (
+				/* Empty state: a line of text, no illustration and no mascot. */
+				<p class="mt-24 font-nothing-subtitle text-xs text-caption">[ {t('work.empty')} ]</p>
+			)
+		}
+	</div>
+</Layout>

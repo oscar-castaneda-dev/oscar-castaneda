@@ -30,4 +30,20 @@ const daily = defineCollection({
 		}),
 });
 
-export const collections = { blog, daily };
+const work = defineCollection({
+	// One file per project, grouped by language like the other two.
+	loader: glob({ base: './src/content/work', pattern: '**/*.md' }),
+	schema: () =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			// Sorted by this, newest first — same contract as blog and daily.
+			pubDate: z.coerce.date(),
+			role: z.string().optional(),
+			stack: z.array(z.string()).default([]),
+			url: z.string().url().optional(),
+			repo: z.string().url().optional(),
+		}),
+});
+
+export const collections = { blog, daily, work };

@@ -76,7 +76,7 @@ The rules that get broken most often, so they are worth repeating here:
   selected element on a screen; `--error` (red) marks a failure or a destructive action and
   nothing else. Red on a screen should mean something is wrong.
 - **Three fonts, three jobs.** Space Grotesk is the document default (body, UI), Space Mono is
-  labels and data (`nd-label`, ALL CAPS), Doto is display only, via `heading-64/48/44/36`.
+  labels and data (`font-nothing-subtitle`, ALL CAPS), Doto is display only, via `heading-64/48/44/36`.
 - **Fonts are self-hosted** through the Astro Fonts API — declared in `astro.config.mjs`,
   emitted with `<Font>` in `BaseHead.astro`. If a family is not in `astro.config.mjs` it does
   not exist; add it there before designing with it.

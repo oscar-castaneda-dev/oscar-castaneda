@@ -41,7 +41,7 @@ The **display end is fluid, the text end is fixed.** Headlines scale with the vi
 | `--body` | 16px | `text-base` | 1.5 | 0 | Body text (UI) |
 | `--body-sm` | 14px | `text-sm` | 1.5 | 0.01em | Secondary body |
 | `--caption` | 12px | `text-xs` | 1.4 | 0.04em | Timestamps, footnotes |
-| `--label` | 11px | `nd-label` | 1.2 | 0.08em | ALL CAPS monospace labels |
+| `--label` | 11px | `font-nothing-subtitle` + a `text-*` size | 1.2 | 0.08em | ALL CAPS monospace labels |
 
 **The one exception:** long-form prose (blog and daily posts, rendered by `@tailwindcss/typography`) runs `--body` at line height **1.7**, not 1.5. Reading a 600-word article is not reading a UI label. The plugin sets this; don't fight it.
 
@@ -49,7 +49,9 @@ The **display end is fluid, the text end is fixed.** Headlines scale with the vi
 
 **Heading utilities** — `heading-64/48/44/36` above. Each sets Doto, `font-weight: 700`, `letter-spacing: -0.03em`, `line-height: 0.92` and `color: var(--color-title)` in one class. Apply directly to `<h1>`–`<h3>`.
 
-**Label utility** — `nd-label` = Space Mono, 11px, uppercase, `letter-spacing: 0.08em`. The one canonical name for the instrument-panel label. It does not set colour — always pair it with a `text-*` class (`nd-label text-caption`).
+**Font utilities** — `font-nothing-dots` (Doto), `font-nothing-code` (Space Mono), `font-nothing-subtitle` (Space Mono + `0.08em` + uppercase + `1.2`), and `subtitle`. These are the names this project uses; reach for them rather than for `font-display` / `font-mono`.
+
+**Label utility** — `font-nothing-subtitle` is the instrument-panel label: Space Mono, ALL CAPS, `0.08em`, `line-height: 1.2`. It sets neither size nor colour, so pair it with both when the inherited ones are wrong (`font-nothing-subtitle text-xs text-caption`).
 
 **Body text** — raw Tailwind `text-*` size + colour class. `font-sans` is already the document default, so you only add a font class to *leave* Space Grotesk (`font-mono`, `font-display`).
 

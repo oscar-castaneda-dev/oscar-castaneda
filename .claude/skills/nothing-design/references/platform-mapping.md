@@ -95,7 +95,7 @@ Token → utility reference for any React/Tailwind v4 target. Tokens live in the
 | `heading-44` | 48px → 72px | Page titles |
 | `heading-36` | 28px → 36px | Subsection headings |
 
-**Subtitle / labels** — `nd-label` + a `text-*` color. Apply to `<p>`, `<span>`, etc.:
+**Subtitle / labels** — `font-nothing-subtitle` + a `text-*` color. Apply to `<p>`, `<span>`, etc.:
 
 | Design Token | Size | Tailwind |
 |---|---|---|
@@ -125,9 +125,10 @@ Uses Tailwind's default `--spacing: 0.25rem` multiplier.
 ### Custom Utilities (global stylesheet)
 
 ```css
-@utility nd-label   { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
-/* No `nd-doto` / `nd-mono`: the `@theme` font keys already give you
-   `font-display` and `font-mono`. One way to do each thing. */
+@utility font-nothing-dots     { font-family: var(--font-display); }
+@utility font-nothing-code     { font-family: var(--font-mono); }
+@utility font-nothing-subtitle { font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+@utility subtitle              { @apply font-nothing-subtitle uppercase; }
 @utility dot-grid   { background-image: radial-gradient(circle, var(--color-outline) 1px, transparent 1px); background-size: 16px 16px; }
 @utility dot-grid-subtle { background-image: radial-gradient(circle, var(--color-border) 0.5px, transparent 0.5px); background-size: 12px 12px; }
 ```
@@ -150,27 +151,27 @@ Uses Tailwind's default `--spacing: 0.25rem` multiplier.
 
 **Tag / chip** (technical, 4px radius):
 ```tsx
-<span className="nd-label text-body py-1 px-4 border border-outline rounded">
+<span className="font-nothing-subtitle text-body py-1 px-4 border border-outline rounded">
   LABEL
 </span>
 ```
 
 **Tag / chip** (pill):
 ```tsx
-<span className="nd-label text-caption py-1 px-3 border border-outline rounded-full">
+<span className="font-nothing-subtitle text-caption py-1 px-3 border border-outline rounded-full">
   LABEL
 </span>
 ```
 
 **Nav label** (active / inactive):
 ```tsx
-<span className="nd-label text-title">[ ACTIVE ]</span>
-<span className="nd-label text-disabled">INACTIVE</span>
+<span className="font-nothing-subtitle text-title">[ ACTIVE ]</span>
+<span className="font-nothing-subtitle text-disabled">INACTIVE</span>
 ```
 
 **Section label** (tertiary marker):
 ```tsx
-<p className="nd-label text-caption mb-8">01 — SECTION TITLE</p>
+<p className="font-nothing-subtitle text-caption mb-8">01 — SECTION TITLE</p>
 ```
 
 **Dot-grid background** (decorative):
@@ -188,8 +189,8 @@ Uses Tailwind's default `--spacing: 0.25rem` multiplier.
 **Data row** (list item with divider):
 ```tsx
 <div className="grid grid-cols-[1fr_auto] items-center py-4 border-b border-border">
-  <span className="nd-label text-caption">LABEL</span>
-  <span className="nd-label text-title">VALUE</span>
+  <span className="font-nothing-subtitle text-caption">LABEL</span>
+  <span className="font-nothing-subtitle text-title">VALUE</span>
 </div>
 ```
 
@@ -404,7 +405,14 @@ Los `cssVariable` de la sección 5.2 los define el `<style>` que inyecta `<Font>
 Utilidades del sistema (idénticas a la sección 4, van en el mismo archivo):
 
 ```css
-@utility nd-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+@utility font-nothing-dots     { font-family: var(--font-display); }
+@utility font-nothing-code     { font-family: var(--font-mono); }
+@utility font-nothing-subtitle { font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+@utility subtitle              { @apply font-nothing-subtitle uppercase; }
+@utility font-nothing-subtitle              { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+
+/* Layout: `container` (80rem, gutter 1.5rem → 3rem desde 768px), `project-grid`
+   y `single-project-grid` — las áreas nombradas de la home y de un proyecto. */
 
 /* Headings — Doto, fluid. Ver la tabla de tokens.md Sección 1. */
 @utility heading-64 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; line-height: 0.92; color: var(--color-title); font-size: clamp(48px, 11vw, 128px); }
@@ -467,7 +475,7 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 ```astro
 <a
 	href={href}
-	class:list={['nd-label transition-colors', isActive ? 'text-title' : 'text-disabled hover:text-caption']}
+	class:list={['font-nothing-subtitle transition-colors', isActive ? 'text-accent' : 'text-title hover:underline']}
 >
 	{isActive ? `[ ${label} ]` : label}
 </a>
@@ -475,7 +483,7 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 
 **Section label** (marcador terciario):
 ```astro
-<p class="nd-label mb-8 text-caption">01 — {t('home.latest')}</p>
+<p class="font-nothing-subtitle mb-8 text-caption">01 — {t('home.latest')}</p>
 ```
 
 **Surface card**:
@@ -489,7 +497,7 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 ```astro
 <a href={href} class="grid grid-cols-[1fr_auto] items-baseline gap-4 border-b border-border py-4">
 	<span class="text-body">{title}</span>
-	<time class="nd-label text-caption" datetime={date.toISOString()}>{formatted}</time>
+	<time class="font-nothing-subtitle text-caption" datetime={date.toISOString()}>{formatted}</time>
 </a>
 ```
 

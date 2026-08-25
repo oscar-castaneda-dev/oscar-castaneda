@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { Lang } from "@/i18n/ui";
 
-export type LocalizedCollection = "blog" | "daily";
+export type LocalizedCollection = "blog" | "daily" | "work";
 
 export type LocalizedEntry<C extends LocalizedCollection> = CollectionEntry<C>;
 

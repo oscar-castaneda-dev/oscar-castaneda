@@ -10,16 +10,21 @@ const entries = Object.entries(languages) as [Lang, string][];
 ---
 
 {/* A <details> dropdown keeps the options as real links, so crawlers still follow them. */}
-<details class="language-picker relative" data-dropdown>
-	{/* The summary shows the locale code — instrument-panel short; the list spells it out. */}
+<details class="language-picker relative flex" data-dropdown>
+	{/*
+	  A cell in the header rail, not a button: a full-height divider on the start
+	  edge, the field name in caption grey and the current value in title.
+	*/}
 	<summary
 		aria-label={t('nav.switchLanguage')}
-		class="nd-label flex h-9 cursor-pointer list-none items-center rounded border border-outline px-3 text-caption transition-colors duration-150 hover:text-body"
+		class="group font-nothing-subtitle flex cursor-pointer list-none items-center gap-2 border-s border-border px-4 text-caption transition-colors duration-150 md:px-6"
 	>
-		{lang}
+		{/* On a phone the value alone carries the cell; the field name would crowd it. */}
+		<span class="hidden sm:inline">{t('nav.language')}</span>
+		<span class="font-bold text-title">{lang}</span>
 	</summary>
 
-	<ul class="absolute inset-e-0 z-10 mt-2 min-w-40 rounded-lg border border-outline bg-raised py-1">
+	<ul class="absolute end-0 top-full z-10 min-w-40 border border-outline bg-raised py-1">
 		{
 			entries.map(([code, label]) => (
 				<li>
@@ -27,7 +32,7 @@ const entries = Object.entries(languages) as [Lang, string][];
 						href={getRelativeLocaleUrl(code, path)}
 						hreflang={code}
 						aria-current={code === lang ? 'true' : undefined}
-						class="nd-label flex min-h-11 items-center border-s-2 border-transparent px-4 text-caption transition-colors duration-150 hover:text-body aria-current:border-accent aria-current:text-title"
+						class="font-nothing-subtitle flex min-h-11 items-center border-s-2 border-transparent px-4 text-caption transition-colors duration-150 hover:text-body aria-current:border-accent aria-current:text-title"
 					>
 						{label}
 					</a>
