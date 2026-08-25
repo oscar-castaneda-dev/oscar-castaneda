@@ -1,8 +1,8 @@
 ---
 import { type CollectionEntry, render } from 'astro:content';
-import { languages, type Lang } from '../../../i18n/ui';
-import BlogPost from '../../../layouts/BlogPost.astro';
-import { getEntrySlug, getLocalizedEntries } from '../../../lib/content';
+import { languages, type Lang } from '@/i18n/ui';
+import BlogPost from '@/layouts/BlogPost.astro';
+import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
 export async function getStaticPaths() {
 	const langs = Object.keys(languages) as Lang[];

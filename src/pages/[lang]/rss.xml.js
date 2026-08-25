@@ -1,8 +1,8 @@
 import rss from '@astrojs/rss';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { languages } from '../../i18n/ui';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
-import { getEntrySlug, getLocalizedEntries } from '../../lib/content';
+import { languages } from '@/i18n/ui';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
 export function getStaticPaths() {
 	return Object.keys(languages).map((lang) => ({ params: { lang } }));

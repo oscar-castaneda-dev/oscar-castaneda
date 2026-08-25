@@ -1,11 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import BaseHead from '@/components/BaseHead.astro';
+import Footer from '@/components/Footer.astro';
+import FormattedDate from '@/components/FormattedDate.astro';
+import Header from '@/components/Header.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'];
 

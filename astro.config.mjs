@@ -6,7 +6,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://oscarcastaneda.dev',
+	output: 'static',
 	i18n: {
 		locales: ['en', 'es'],
 		defaultLocale: 'en',

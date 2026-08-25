@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import type { Lang } from '../i18n/ui';
+import type { Lang } from '@/i18n/ui';
 
 /** Collections whose entries are grouped into per-language folders. */
 export type LocalizedCollection = 'blog' | 'daily';

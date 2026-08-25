@@ -1,13 +1,13 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
+import '@/styles/global.css';
 import type { ImageMetadata } from 'astro';
 import { Font } from 'astro:assets';
 import { getAbsoluteLocaleUrl } from 'astro:i18n';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { defaultLang, languages, type Lang } from '../i18n/ui';
-import { getLangFromUrl, pathWithoutLang, useTranslations } from '../i18n/utils';
+import FallbackImage from '@/assets/blog-placeholder-1.jpg';
+import { defaultLang, languages, type Lang } from '@/i18n/ui';
+import { getLangFromUrl, pathWithoutLang, useTranslations } from '@/i18n/utils';
 
 interface Props {
 	title: string;
