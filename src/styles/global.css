@@ -7,6 +7,17 @@
 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+  The variables on the right are defined by Astro's <Font> tags in BaseHead.
+  Overriding `--font-sans` also sets the document default, so body copy picks up
+  Space Grotesk without a class on <body>.
+*/
+@theme {
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-space-mono);
+  --font-display: var(--font-doto);
+}
+
 /* Keeps native widgets (scrollbars, form controls) in sync with the theme. */
 html {
   color-scheme: light;

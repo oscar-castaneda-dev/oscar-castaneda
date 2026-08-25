@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css';
 import type { ImageMetadata } from 'astro';
+import { Font } from 'astro:assets';
 import { getAbsoluteLocaleUrl } from 'astro:i18n';
 import FallbackImage from '@/assets/blog-placeholder.jpg';
 import { defaultLang, languages, type Lang } from '@/i18n/ui';
@@ -32,6 +33,16 @@ const rssURL = getAbsoluteLocaleUrl(lang, 'rss.xml').replace(/\/$/, '');
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
+
+{/*
+  Preload is narrowed to the `latin` subset at the weight each face actually
+  opens with: an unfiltered `preload` emits a link per subset *and* weight, which
+  is ten blocking font requests. `latin-ext` still loads, just on demand.
+  Doto is decorative and never preloaded — it would compete with the content.
+*/}
+<Font cssVariable="--font-space-grotesk" preload={[{ subset: 'latin' }]} />
+<Font cssVariable="--font-space-mono" preload={[{ subset: 'latin', weight: 400 }]} />
+<Font cssVariable="--font-doto" />
 <link
 	rel="alternate"
 	type="application/rss+xml"
