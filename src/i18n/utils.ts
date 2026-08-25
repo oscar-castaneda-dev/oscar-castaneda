@@ -2,7 +2,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import { defaultLang, languages, ui, type Lang, type UIKey } from './ui';
 
 /** Narrows an arbitrary string (a route param, a collection id segment) to a Lang. */
-export function isLang(value: string | undefined): value is Lang {
+function isLang(value: string | undefined): value is Lang {
 	return value != null && value in languages;
 }
 

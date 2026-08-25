@@ -1,11 +1,8 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '@/styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { Font } from 'astro:assets';
 import { getAbsoluteLocaleUrl } from 'astro:i18n';
-import FallbackImage from '@/assets/blog-placeholder-1.jpg';
+import FallbackImage from '@/assets/blog-placeholder.jpg';
 import { defaultLang, languages, type Lang } from '@/i18n/ui';
 import { getLangFromUrl, pathWithoutLang, useTranslations } from '@/i18n/utils';
 
@@ -30,7 +27,6 @@ const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
 const rssURL = getAbsoluteLocaleUrl(lang, 'rss.xml').replace(/\/$/, '');
 ---
 
-<!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -44,20 +40,14 @@ const rssURL = getAbsoluteLocaleUrl(lang, 'rss.xml').replace(/\/$/, '');
 />
 <meta name="generator" content={Astro.generator} />
 
-<Font cssVariable="--font-atkinson" preload />
-
-<!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
-<!-- Alternate languages -->
 {alternates.map(({ code, href }) => <link rel="alternate" hreflang={code} href={href} />)}
 <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLang, path)} />
 
-<!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="description" content={description} />
 
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
@@ -70,5 +60,4 @@ const rssURL = getAbsoluteLocaleUrl(lang, 'rss.xml').replace(/\/$/, '');
 		.map(({ code }) => <meta property="og:locale:alternate" content={code} />)
 }
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />

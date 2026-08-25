@@ -1,11 +1,9 @@
 ---
 import { type CollectionEntry } from 'astro:content';
-import BaseHead from '@/components/BaseHead.astro';
 import DailyNote from '@/components/DailyNote.astro';
-import Footer from '@/components/Footer.astro';
-import Header from '@/components/Header.astro';
+import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/ui';
-import { getLangFromUrl, localizedPath, useTranslations } from '@/i18n/utils';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
 export async function getStaticPaths() {
@@ -30,34 +28,10 @@ const t = useTranslations(lang);
 const title = entry.data.title ?? entry.data.pubDate.toLocaleDateString(lang, { dateStyle: 'long' });
 ---
 
-<!doctype html>
-<html lang={lang}>
-	<head>
-		<BaseHead
-			title={`${title} | ${t('daily.title')}`}
-			description={entry.data.description ?? t('daily.description')}
-		/>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<p class="back"><a href={localizedPath(lang, 'daily')}>&larr; {t('daily.title')}</a></p>
-			<DailyNote entry={entry} headingLevel="h1" />
-		</main>
-		<Footer />
-	</body>
-</html>
+<Layout
+	title={`${title} | ${t('daily.title')}`}
+	description={entry.data.description ?? t('daily.description')}
+>
+	<DailyNote entry={entry} headingLevel="h1" />
+</Layout>
 
-<style>
-	main {
-		width: 720px;
-		max-width: calc(100% - 2em);
-		margin: auto;
-		padding: 3em 1em;
-		color: rgb(var(--gray-dark));
-	}
-	.back {
-		margin: 0 0 1em 0;
-		font-size: 0.9em;
-	}
-</style>

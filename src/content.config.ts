@@ -3,8 +3,8 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	// Load Markdown files in the `src/content/blog/` directory.
+	loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
@@ -19,7 +19,7 @@ const blog = defineCollection({
 
 const daily = defineCollection({
 	// Short-form notes, one file per entry, grouped by language.
-	loader: glob({ base: './src/content/daily', pattern: '**/*.{md,mdx}' }),
+	loader: glob({ base: './src/content/daily', pattern: '**/*.md' }),
 	schema: () =>
 		z.object({
 			// A note is allowed to be untitled — the date is its heading then.
