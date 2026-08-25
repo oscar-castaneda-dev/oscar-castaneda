@@ -24,12 +24,25 @@ export function localizedPath(lang: Lang, path = ''): string {
 	return getRelativeLocaleUrl(lang, path);
 }
 
+/**
+ * The `[...lang]` route param for a locale. The default locale is unprefixed,
+ * so it maps to `undefined`, which collapses the segment out of the URL.
+ */
+export function langParam(lang: Lang): Lang | undefined {
+	return lang === defaultLang ? undefined : lang;
+}
+
 /** `getStaticPaths` entries for every configured locale. */
 export function getLangStaticPaths() {
-	return (Object.keys(languages) as Lang[]).map((lang) => ({ params: { lang } }));
+	return (Object.keys(languages) as Lang[]).map((lang) => ({
+		params: { lang: langParam(lang) },
+	}));
 }
 
 /** The current path with its locale segment stripped, e.g. `/es/blog/first-post/` -> `blog/first-post/`. */
 export function pathWithoutLang(url: URL): string {
-	return url.pathname.split('/').slice(2).join('/');
+	const segments = url.pathname.split('/').slice(1);
+	// The default locale has no prefix, so only drop a segment that is a locale.
+	if (isLang(segments[0])) segments.shift();
+	return segments.join('/');
 }

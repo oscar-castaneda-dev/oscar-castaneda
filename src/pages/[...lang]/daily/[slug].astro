@@ -3,7 +3,7 @@ import { type CollectionEntry } from 'astro:content';
 import DailyNote from '@/components/DailyNote.astro';
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/ui';
-import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import { getLangFromUrl, langParam, useTranslations } from '@/i18n/utils';
 import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
 export async function getStaticPaths() {
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 		langs.map(async (lang) => {
 			const notes = await getLocalizedEntries('daily', lang);
 			return notes.map((entry) => ({
-				params: { lang, slug: getEntrySlug(entry) },
+				params: { lang: langParam(lang), slug: getEntrySlug(entry) },
 				props: entry,
 			}));
 		}),

@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, render } from 'astro:content';
 import { languages, type Lang } from '@/i18n/ui';
+import { langParam } from '@/i18n/utils';
 import BlogPost from '@/layouts/BlogPost.astro';
 import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
@@ -10,7 +11,7 @@ export async function getStaticPaths() {
 		langs.map(async (lang) => {
 			const posts = await getLocalizedEntries('blog', lang);
 			return posts.map((post) => ({
-				params: { lang, slug: getEntrySlug(post) },
+				params: { lang: langParam(lang), slug: getEntrySlug(post) },
 				props: post,
 			}));
 		}),
