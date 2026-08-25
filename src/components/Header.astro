@@ -8,9 +8,9 @@ const t = useTranslations(lang);
 
 const links = [
 	{ href: localizedPath(lang), label: t('nav.home') },
+	{ href: localizedPath(lang, 'about'), label: t('nav.about') },
 	{ href: localizedPath(lang, 'blog'), label: t('nav.blog') },
 	{ href: localizedPath(lang, 'daily'), label: t('nav.daily') },
-	{ href: localizedPath(lang, 'about'), label: t('nav.about') },
 ];
 
 const current = Astro.url.pathname;

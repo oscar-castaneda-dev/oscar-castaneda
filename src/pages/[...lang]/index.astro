@@ -1,42 +1,16 @@
 ---
+import Counter from '@/components/Counter';
 import Layout from '@/layouts/Layout.astro';
-import FormattedDate from '@/components/FormattedDate.astro';
-import { getLangFromUrl, getLangStaticPaths, localizedPath, useTranslations } from '@/i18n/utils';
-import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
+import { getLangFromUrl, getLangStaticPaths, useTranslations } from '@/i18n/utils';
 
 export const getStaticPaths = getLangStaticPaths;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const posts = (await getLocalizedEntries('blog', lang)).slice(0, 3);
 ---
 
 <Layout title={t('site.title')} description={t('site.description')}>
 	<h1 class="text-3xl font-bold tracking-tight">{t('home.heading')}</h1>
 	<p class="mt-3 text-gray-600 dark:text-gray-400">{t('home.intro')}</p>
-
-	{
-		posts.length > 0 && (
-			<section class="mt-12">
-				<h2 class="text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-					{t('home.latest')}
-				</h2>
-				<ul class="mt-4 space-y-4">
-					{posts.map((post) => (
-						<li>
-							<a
-								href={localizedPath(lang, `blog/${getEntrySlug(post)}`)}
-								class="font-medium hover:text-blue-600 dark:hover:text-blue-400"
-							>
-								{post.data.title}
-							</a>
-							<p class="text-sm text-gray-500 dark:text-gray-400">
-								<FormattedDate date={post.data.pubDate} />
-							</p>
-						</li>
-					))}
-				</ul>
-			</section>
-		)
-	}
+	<Counter client:load />
 </Layout>
