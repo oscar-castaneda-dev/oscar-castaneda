@@ -8,11 +8,109 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  The variables on the right are defined by Astro's <Font> tags in BaseHead.
-  Overriding `--font-sans` also sets the document default, so body copy picks up
-  Space Grotesk without a class on <body>.
+  Colour tokens live on :root / .dark as raw `--nd-*` values and reach Tailwind
+  through `@theme inline` — inline keeps the `var()` reference alive, so the
+  .dark override wins and opacity modifiers (`bg-card/60`) still resolve.
 */
-@theme {
+
+/*
+  Light — printed technical manual: warm off-white paper, black ink. The whole
+  ramp is tinted off the same warm neutral as --surface; the only pure white
+  left is --card, so an elevated surface reads as lifted off the page.
+*/
+:root {
+  --nd-surface: #f3f2f2;
+  --nd-card: #ffffff;
+  --nd-raised: #eceaea;
+  --nd-border: #e4e2e2;
+  --nd-outline: #c9c6c6;
+  --nd-disabled: #969292;
+  --nd-caption: #656161;
+  --nd-body: #1a1818;
+  --nd-title: #000000;
+  /* Saturated signals wash out on off-white, so they darken here. Red doesn't. */
+  --nd-accent: #2f7a41;
+  --nd-accent-subtle: rgba(47, 122, 65, 0.14);
+  --nd-success: #2f7a41;
+  --nd-warning: #856612;
+  --nd-action: #b84e08;
+
+  /*
+    Section palettes — green marks building, indigo marks writing. In dark they
+    are near-black tints; in light they invert into tinted paper, the same warm
+    off-white pushed a few points toward the hue.
+  */
+  --nd-green-surface: #e9f0eb;
+  --nd-green-border: #c6d8cc;
+  --nd-green-muted: #4a7355;
+  --nd-indigo-surface: #ebebf3;
+  --nd-indigo-border: #ccccdd;
+  --nd-indigo-muted: #4d4d80;
+}
+
+/* Dark — instrument panel in a dark room: OLED black, glowing data. */
+.dark {
+  --nd-surface: #000000;
+  --nd-card: #111111;
+  --nd-raised: #1a1a1a;
+  --nd-border: #222222;
+  --nd-outline: #333333;
+  --nd-disabled: #666666;
+  --nd-caption: #999999;
+  --nd-body: #e8e8e8;
+  --nd-title: #ffffff;
+  --nd-accent: #4a9e5c;
+  --nd-accent-subtle: rgba(74, 158, 92, 0.15);
+  --nd-success: #4a9e5c;
+  --nd-warning: #d4a843;
+  --nd-action: #f16a0d;
+
+  --nd-green-surface: #0a1a0d;
+  --nd-green-border: #1a3d22;
+  --nd-green-muted: #3d6645;
+  --nd-indigo-surface: #0d0d1a;
+  --nd-indigo-border: #1e1e33;
+  --nd-indigo-muted: #3d3d66;
+}
+
+@theme inline {
+  --color-surface: var(--nd-surface);
+  --color-card: var(--nd-card);
+  --color-raised: var(--nd-raised);
+  --color-border: var(--nd-border);
+  --color-outline: var(--nd-outline);
+  --color-disabled: var(--nd-disabled);
+  --color-caption: var(--nd-caption);
+  --color-body: var(--nd-body);
+  --color-title: var(--nd-title);
+  --color-success: var(--nd-success);
+  --color-warning: var(--nd-warning);
+  --color-action: var(--nd-action);
+
+  /*
+    The signal of this site is green, not the Nothing red: it marks what is
+    active or selected. Red is demoted to --error, where a wrong turn or a
+    destructive action is the only thing that earns it.
+  */
+  --color-accent: var(--nd-accent);
+  --color-accent-subtle: var(--nd-accent-subtle);
+
+  /* Identical in both modes: an error must read as the same red everywhere. */
+  --color-error: #d71921;
+
+  /* Section palettes. Surfaces and borders only — never body text. */
+  --color-green-surface: var(--nd-green-surface);
+  --color-green-border: var(--nd-green-border);
+  --color-green-muted: var(--nd-green-muted);
+  --color-indigo-surface: var(--nd-indigo-surface);
+  --color-indigo-border: var(--nd-indigo-border);
+  --color-indigo-muted: var(--nd-indigo-muted);
+
+  /*
+    The variables on the right are defined by Astro's <Font> tags in BaseHead.
+    Overriding `--font-sans` also sets the document default, so body copy picks
+    up Space Grotesk without a class on <body>.
+  */
   --font-sans: var(--font-space-grotesk);
   --font-mono: var(--font-space-mono);
   --font-display: var(--font-doto);
@@ -24,6 +122,89 @@ html {
 }
 html.dark {
   color-scheme: dark;
+}
+
+/*
+  The page gutter. Overrides Tailwind's built-in `container`, which is centred at
+  every breakpoint but carries no padding of its own. The inline padding steps up
+  with the viewport: 48px of gutter on a phone would leave the text a narrow column.
+*/
+@utility container {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (width >= 48rem) {
+  .container {
+    padding-inline: 3rem;
+  }
+}
+
+/* The instrument-panel label: Space Mono, ALL CAPS. Pair it with a text-* colour. */
+@utility nd-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* Headings — Doto, fluid between the two ends of the clamp. */
+@utility heading-64 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--color-title);
+  font-size: clamp(48px, 11vw, 128px);
+}
+@utility heading-48 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--color-title);
+  font-size: clamp(48px, 8vw, 100px);
+}
+@utility heading-44 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--color-title);
+  font-size: clamp(48px, 5.5vw, 72px);
+}
+@utility heading-36 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  color: var(--color-title);
+  font-size: clamp(28px, 2.8vw, 36px);
+}
+
+/*
+  Dot-matrix motif. The dots read off the theme tokens, but #c9c6c6 on #f3f2f2
+  is nearly invisible: raise the opacity in light mode (`opacity-40 dark:opacity-20`).
+*/
+@utility dot-grid {
+  background-image: radial-gradient(
+    circle,
+    var(--color-outline) 1px,
+    transparent 1px
+  );
+  background-size: 16px 16px;
+}
+
+@utility dot-grid-subtle {
+  background-image: radial-gradient(
+    circle,
+    var(--color-border) 0.5px,
+    transparent 0.5px
+  );
+  background-size: 12px 12px;
 }
 
 /* The theme swap is cross-faded via the View Transitions API — honour reduced motion. */

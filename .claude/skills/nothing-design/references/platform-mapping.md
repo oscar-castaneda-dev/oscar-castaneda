@@ -40,7 +40,8 @@ extension Color {
     static let ndCaption  = Color(hex: "999999")
     static let ndBody     = Color(hex: "E8E8E8")
     static let ndDisplay  = Color.white
-    static let ndAccent   = Color(hex: "D71921")
+    static let ndAccent   = Color(hex: "4A9E5C")
+    static let ndError    = Color(hex: "D71921")
     static let ndSuccess  = Color(hex: "4A9E5C")
     static let ndWarning  = Color(hex: "D4A843")
     static let ndAction   = Color(hex: "F16A0D")
@@ -74,11 +75,14 @@ Token → utility reference for any React/Tailwind v4 target. Tokens live in the
 | `--disabled` | `text-disabled` |
 | `--caption` | `text-caption` |
 | `--body` | `text-body` |
-| `--accent` | `text-accent` / `bg-accent` / `border-accent` |
+| `--accent` (verde) | `text-accent` / `bg-accent` / `border-accent` |
 | `--accent-subtle` | `bg-accent-subtle` |
+| `--error` (rojo) | `text-error` / `border-error` |
 | `--success` | `text-success` / `bg-success` |
 | `--warning` | `text-warning` |
 | `--action` | `text-action` |
+| `--green-*` (building) | `bg-green-surface` / `border-green-border` / `text-green-muted` |
+| `--indigo-*` (writing) | `bg-indigo-surface` / `border-indigo-border` / `text-indigo-muted` |
 
 ### Type Scale → Utility Classes
 
@@ -314,21 +318,28 @@ Por eso los tokens se definen **una vez por modo sobre `:root` / `.dark`** y se 
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Light — printed technical manual. */
+/* Light — printed technical manual. Warm neutral ramp; only --card is pure white. */
 :root {
-  --nd-surface: #f5f5f5;
+  --nd-surface: #f3f2f2;
   --nd-card: #ffffff;
-  --nd-raised: #f0f0f0;
-  --nd-border: #e8e8e8;
-  --nd-outline: #cccccc;
-  --nd-disabled: #999999;
-  --nd-caption: #666666;
-  --nd-body: #1a1a1a;
+  --nd-raised: #eceaea;
+  --nd-border: #e4e2e2;
+  --nd-outline: #c9c6c6;
+  --nd-disabled: #969292;
+  --nd-caption: #656161;
+  --nd-body: #1a1818;
   --nd-title: #000000;
   /* Saturated signals wash out on off-white — darkened. Red stays. */
   --nd-success: #2f7a41;
-  --nd-warning: #8a6b14;
+  --nd-warning: #856612;
   --nd-action: #b84e08;
+  /* Paletas de sección: en claro, el mismo papel empujado hacia el tono. */
+  --nd-green-surface: #e9f0eb;
+  --nd-green-border: #c6d8cc;
+  --nd-green-muted: #4a7355;
+  --nd-indigo-surface: #ebebf3;
+  --nd-indigo-border: #ccccdd;
+  --nd-indigo-muted: #4d4d80;
 }
 
 /* Dark — instrument panel in a dark room (OLED). */
@@ -345,6 +356,12 @@ Por eso los tokens se definen **una vez por modo sobre `:root` / `.dark`** y se 
   --nd-success: #4a9e5c;
   --nd-warning: #d4a843;
   --nd-action: #f16a0d;
+  --nd-green-surface: #0a1a0d;
+  --nd-green-border: #1a3d22;
+  --nd-green-muted: #3d6645;
+  --nd-indigo-surface: #0d0d1a;
+  --nd-indigo-border: #1e1e33;
+  --nd-indigo-muted: #3d3d66;
 }
 
 @theme inline {
@@ -361,9 +378,20 @@ Por eso los tokens se definen **una vez por modo sobre `:root` / `.dark`** y se 
   --color-warning: var(--nd-warning);
   --color-action: var(--nd-action);
 
-  /* La señal roja es idéntica en ambos modos: pasa AA en los dos. */
-  --color-accent: #d71921;
-  --color-accent-subtle: rgba(215, 25, 33, 0.15);
+  /* El acento de este sitio es verde: marca lo activo o seleccionado. */
+  --color-accent: var(--nd-accent);
+  --color-accent-subtle: var(--nd-accent-subtle);
+
+  /* El rojo queda solo para fallos y acciones destructivas, igual en ambos modos. */
+  --color-error: #d71921;
+
+  /* Paletas de sección: solo superficie, borde y marcas. Nunca texto. */
+  --color-green-surface: var(--nd-green-surface);
+  --color-green-border: var(--nd-green-border);
+  --color-green-muted: var(--nd-green-muted);
+  --color-indigo-surface: var(--nd-indigo-surface);
+  --color-indigo-border: var(--nd-indigo-border);
+  --color-indigo-muted: var(--nd-indigo-muted);
 
   --font-sans: var(--font-space-grotesk);
   --font-mono: var(--font-space-mono);

@@ -11,15 +11,15 @@ const entries = Object.entries(languages) as [Lang, string][];
 
 {/* A <details> dropdown keeps the options as real links, so crawlers still follow them. */}
 <details class="language-picker relative" data-dropdown>
+	{/* The summary shows the locale code — instrument-panel short; the list spells it out. */}
 	<summary
 		aria-label={t('nav.switchLanguage')}
-		class="cursor-pointer list-none rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 hover:text-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-100"
+		class="nd-label flex h-9 cursor-pointer list-none items-center rounded border border-outline px-3 text-caption transition-colors duration-150 hover:text-body"
 	>
-		{languages[lang]}
+		{lang}
 	</summary>
-	<ul
-		class="absolute end-0 z-10 mt-1 min-w-32 rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-gray-900"
-	>
+
+	<ul class="absolute inset-e-0 z-10 mt-2 min-w-40 rounded-lg border border-outline bg-raised py-1">
 		{
 			entries.map(([code, label]) => (
 				<li>
@@ -27,7 +27,7 @@ const entries = Object.entries(languages) as [Lang, string][];
 						href={getRelativeLocaleUrl(code, path)}
 						hreflang={code}
 						aria-current={code === lang ? 'true' : undefined}
-						class="block px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 aria-[current=true]:font-medium aria-[current=true]:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:aria-[current=true]:text-gray-100"
+						class="nd-label flex min-h-11 items-center border-s-2 border-transparent px-4 text-caption transition-colors duration-150 hover:text-body aria-current:border-accent aria-current:text-title"
 					>
 						{label}
 					</a>

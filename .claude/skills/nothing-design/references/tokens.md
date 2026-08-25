@@ -70,42 +70,71 @@ One set of roles, two sets of values. Both modes are authored together — see t
 
 | Token | Tailwind | Dark | Contrast on `--surface` | Light | Contrast on `--surface` | Role |
 |-------|----------|------|--------------------------|-------|--------------------------|------|
-| `--surface` | `bg-surface` | `#000000` | — | `#F5F5F5` | — | Page background |
+| `--surface` | `bg-surface` | `#000000` | — | `#F3F2F2` | — | Page background |
 | `--card` | `bg-card` | `#111111` | 1.1:1 | `#FFFFFF` | 1.1:1 | Elevated surfaces, cards |
-| `--raised` | `bg-raised` | `#1A1A1A` | 1.2:1 | `#F0F0F0` | 1.0:1 | Secondary elevation |
-| `--border` | `border-border` | `#222222` | 1.3:1 | `#E8E8E8` | 1.1:1 | Subtle dividers (decorative only) |
-| `--outline` | `border-outline` | `#333333` | 1.7:1 | `#CCCCCC` | 1.5:1 | Intentional borders, wireframe lines |
-| `--disabled` | `text-disabled` | `#666666` | 3.7:1 | `#999999` | 2.6:1 | Disabled text, decorative elements |
-| `--caption` | `text-caption` | `#999999` | 7.4:1 | `#666666` | 5.3:1 | Labels, captions, metadata |
-| `--body` | `text-body` | `#E8E8E8` | 17.1:1 | `#1A1A1A` | 16.0:1 | Body text |
-| `--title` | `text-title` | `#FFFFFF` | 21:1 | `#000000` | 19.3:1 | Headlines, hero numbers |
+| `--raised` | `bg-raised` | `#1A1A1A` | 1.2:1 | `#ECEAEA` | 1.1:1 | Secondary elevation |
+| `--border` | `border-border` | `#222222` | 1.3:1 | `#E4E2E2` | 1.1:1 | Subtle dividers (decorative only) |
+| `--outline` | `border-outline` | `#333333` | 1.7:1 | `#C9C6C6` | 1.5:1 | Intentional borders, wireframe lines |
+| `--disabled` | `text-disabled` | `#666666` | 3.7:1 | `#969292` | 2.7:1 | Disabled text, decorative elements |
+| `--caption` | `text-caption` | `#999999` | 7.4:1 | `#656161` | 5.4:1 | Labels, captions, metadata |
+| `--body` | `text-body` | `#E8E8E8` | 17.1:1 | `#1A1818` | 15.7:1 | Body text |
+| `--title` | `text-title` | `#FFFFFF` | 21:1 | `#000000` | 18.8:1 | Headlines, hero numbers |
 
-`--disabled` sits below 3:1 in light mode by design — it is for decorative and inert elements. Never put meaningful text on it in either mode; if it must be read, it is `--caption`. Note the ramp is **not** symmetric: light mode compresses (19.3:1 max vs 21:1), so a gray step that separates cleanly in dark can flatten in light. Verify contrast on the surface the element actually sits on — text inside a `--card` in light mode is on `#FFFFFF`, not `#F5F5F5`.
+The light ramp is a **warm** neutral, not a pure gray: `--surface` (`#F3F2F2`) carries a point more red than green and blue, and every step above it is tinted to match. A neutral gray dropped into this ramp reads cold next to it. The one pure white left is `--card` — with no shadows, that step up is the only elevation cue a card gets.
+
+`--disabled` sits below 3:1 in light mode by design — it is for decorative and inert elements. Never put meaningful text on it in either mode; if it must be read, it is `--caption`. Note the ramp is **not** symmetric: light mode compresses (18.8:1 max vs 21:1), so a gray step that separates cleanly in dark can flatten in light. Verify contrast on the surface the element actually sits on — text inside a `--card` in light mode is on `#FFFFFF`, not `#F3F2F2`.
 
 ### Accent & Status Colors
 
-Off-white is a much brighter backdrop than OLED black: the saturated dark-mode values wash out on it. Green, amber and orange therefore get a darkened light-mode value. Red does not — the signal must read as the same red in both modes, and it already passes.
+**This site's accent is green, not the Nothing red.** `--accent` marks what is *active or selected* — the current option, the live state, the chosen thing. Red keeps the job it is actually good at and nothing else: `--error`, for a failure or a destructive action. The two are never interchangeable, and a screen that shows red is a screen where something went wrong.
+
+Off-white is a much brighter backdrop than OLED black: the saturated dark-mode values wash out on it. Green, amber and orange therefore get a darkened light-mode value. Red does not — an error must read as the same red in both modes, and it already passes.
 
 | Token | Tailwind | Dark | on `--surface` | Light | on `--surface` | Usage |
 |-------|----------|------|----------------|-------|----------------|-------|
-| `--accent` | `text-accent` / `bg-accent` | `#D71921` | 4.1:1 | `#D71921` | 4.8:1 | Signal light: active states, destructive, urgent. One per screen as UI element. Never decorative. |
-| `--accent-subtle` | `bg-accent-subtle` | `rgba(215,25,33,0.15)` | — | `rgba(215,25,33,0.15)` | — | Accent tint backgrounds |
-| `--success` | `text-success` | `#4A9E5C` | 6.3:1 | `#2F7A41` | 4.8:1 | Confirmed, completed, connected |
-| `--warning` | `text-warning` | `#D4A843` | 9.5:1 | `#8A6B14` | 4.6:1 | Caution, pending, degraded |
-| `--action` | `text-action` | `#F16A0D` | 6.8:1 | `#B84E08` | 4.7:1 | Tappable text: links, picker values. Not for buttons. |
-| `--error` | — | `#D71921` | — | `#D71921` | — | Shares accent red — errors ARE the accent moment |
+| `--accent` | `text-accent` / `bg-accent` | `#4A9E5C` | 6.3:1 | `#2F7A41` | 4.7:1 | Signal light: active and selected states. One per screen as UI element. Never decorative. |
+| `--accent-subtle` | `bg-accent-subtle` | `rgba(74,158,92,0.15)` | — | `rgba(47,122,65,0.14)` | — | Accent tint backgrounds |
+| `--error` | `text-error` / `border-error` | `#D71921` | 4.1:1 | `#D71921` | 4.6:1 | Failures and destructive actions. Nothing else. |
+| `--success` | `text-success` | `#4A9E5C` | 6.3:1 | `#2F7A41` | 4.7:1 | Confirmed, completed, connected |
+| `--warning` | `text-warning` | `#D4A843` | 9.5:1 | `#856612` | 4.8:1 | Caution, pending, degraded |
+| `--action` | `text-action` | `#F16A0D` | 6.8:1 | `#B84E08` | 4.6:1 | Tappable text: links, picker values. Not for buttons. |
 | `--info` | — | `#999999` | — | `#666666` | — | Uses caption color |
 
-`--accent` at 4.1:1 in dark passes AA for large text and UI components, not for body copy. That is fine — red is a signal on labels, borders, dots and numbers, never a paragraph. If red must carry small text in dark mode, use `--title` for the text and the red on a border or dot next to it.
+`--accent` and `--success` carry the same hex on purpose: on this site "good" and "active" are the same green. They stay separate tokens because they answer different questions — `--success` encodes a data value, `--accent` marks a UI state — and only one of them would move if the palette ever shifted.
 
-**Data status colors:** `--success` = good/in range, `--warning` = moderate/attention, `--accent` = bad/over limit, `--body` = neutral. Apply color to **value**, not label or background. Labels stay `--caption`. Trend arrows inherit value color.
+`--error` at 4.1:1 in dark passes AA for large text and UI components, not for body copy. That is fine — red is a signal on labels, borders, dots and numbers, never a paragraph. If red must carry small text in dark mode, use `--title` for the text and the red on a border or dot next to it.
+
+**Data status colors:** `--success` = good/in range, `--warning` = moderate/attention, `--error` = bad/over limit, `--body` = neutral. Apply color to **value**, not label or background. Labels stay `--caption`. Trend arrows inherit value color.
+
+### Section Palettes
+
+Two hues carry section identity, so a page is recognisable before a word is read: **green = building** (work, side projects), **indigo = writing** (blog, daily). They are territory, not signal — `--accent` and `--error` keep their jobs untouched.
+
+Note the green appears twice in this system and the two never meet: `--accent` is a saturated green that marks one active element, while `--green-surface` is a tint a few points off the page background. If a section tint ever reads as bright as the accent, it is wrong.
+
+| Token | Tailwind | Dark | Light | Role |
+|-------|----------|------|-------|------|
+| `--green-surface` | `bg-green-surface` | `#0A1A0D` | `#E9F0EB` | Tinted section background |
+| `--green-border` | `border-green-border` | `#1A3D22` | `#C6D8CC` | Border on that surface |
+| `--green-muted` | `text-green-muted` | `#3D6645` | `#4A7355` | Dots, rules, secondary marks on it |
+| `--indigo-surface` | `bg-indigo-surface` | `#0D0D1A` | `#EBEBF3` | Tinted section background |
+| `--indigo-border` | `border-indigo-border` | `#1E1E33` | `#CCCCDD` | Border on that surface |
+| `--indigo-muted` | `text-indigo-muted` | `#3D3D66` | `#4D4D80` | Dots, rules, secondary marks on it |
+
+Rules:
+
+- **Surfaces, borders and marks. Never body text.** Title, body and caption keep coming from the neutral ramp on top of a tinted surface — the tint is quiet enough that the ramp still reads (`--body` on `--green-surface` clears 14:1 in both modes).
+- **One palette per page.** A page belongs to one territory. Two tints on one screen and the code stops meaning anything.
+- **The tint is nearly invisible on purpose.** In dark it is a few points off black; in light it is the same warm paper pushed toward the hue. If it reads as "a green box", it is too strong.
+- **It does not replace `--accent`.** The accent still marks the one active thing, and `--error` the one broken thing, on a tinted surface as anywhere else.
+- `--*-muted` sits around 4.7:1 on its own surface: fine for large text, marks and UI, not for paragraphs.
 
 ### What Stays Fixed Across Modes
 
 Token *names* and *roles* — never their values. Also identical in both modes: ALL CAPS label treatment, fonts, type scale, spacing, component shapes, radii, motion. Only the hex values flip. If a component needs a different *shape* or *layout* per mode, the design is wrong.
 
 **Dark feel:** Instrument panel in a dark room. OLED black, white data glowing.
-**Light feel:** Printed technical manual. Off-white paper (#F5F5F5), black ink. Cards = `#FFFFFF` on off-white page = subtle elevation without shadows.
+**Light feel:** Printed technical manual. Warm off-white paper (#F3F2F2), black ink. Cards = `#FFFFFF` on off-white page = subtle elevation without shadows.
 
 ---
 
@@ -167,4 +196,4 @@ Steps move in multiples of 8 from `--space-sm` up; 4px and 2px exist only for ti
 
 Usage in `.astro`: `<div class="dot-grid pointer-events-none absolute ... opacity-20" aria-hidden="true" />`
 
-Dots 1–2px, uniform 12–16px grid. Opacity 0.1–0.2 for backgrounds, full for data. Never as container border or button style. The dots read off `--color-outline`/`--color-border`, so they follow the theme automatically — but check the light mode: `#CCCCCC` dots on `#F5F5F5` at `opacity-20` are effectively invisible. In light mode raise the opacity (0.4–0.6) or step the colour down to `--caption`. Decorative dot grids are `aria-hidden`.
+Dots 1–2px, uniform 12–16px grid. Opacity 0.1–0.2 for backgrounds, full for data. Never as container border or button style. The dots read off `--color-outline`/`--color-border`, so they follow the theme automatically — but check the light mode: `#C9C6C6` dots on `#F3F2F2` at `opacity-20` are effectively invisible. In light mode raise the opacity (0.4–0.6) or step the colour down to `--caption`. Decorative dot grids are `aria-hidden`.

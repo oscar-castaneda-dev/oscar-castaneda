@@ -5,32 +5,30 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const modes = [
-	{ mode: 'light', icon: '☀️', label: t('theme.light') },
-	{ mode: 'dark', icon: '🌙', label: t('theme.dark') },
-	{ mode: 'system', icon: '💻', label: t('theme.system') },
+	{ mode: 'light', label: t('theme.light') },
+	{ mode: 'dark', label: t('theme.dark') },
+	{ mode: 'system', label: t('theme.system') },
 ] as const;
 ---
 
 <details class="theme-picker relative" data-dropdown>
 	<summary
 		aria-label={t('theme.label')}
-		class="cursor-pointer list-none rounded border border-gray-300 px-2 py-1 text-sm leading-none hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+		class="nd-label flex h-9 min-w-[7ch] cursor-pointer list-none items-center justify-center rounded border border-outline px-3 text-caption transition-colors duration-150 hover:text-body"
 	>
-		{modes.map(({ mode, icon }) => <span class:list={['icon', `icon-${mode}`]}>{icon}</span>)}
+		{/* All three ship in the markup; CSS shows the one `data-theme` names. */}
+		{modes.map(({ mode, label }) => <span class:list={['state', `state-${mode}`]}>{label}</span>)}
 	</summary>
 
-	<ul
-		class="absolute end-0 z-10 mt-1 min-w-32 rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-gray-900"
-	>
+	<ul class="absolute end-0 z-10 mt-2 min-w-40 rounded-lg border border-outline bg-raised py-1">
 		{
-			modes.map(({ mode, icon, label }) => (
+			modes.map(({ mode, label }) => (
 				<li>
 					<button
 						type="button"
 						data-mode={mode}
-						class="option flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-start text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+						class="option nd-label flex min-h-11 w-full cursor-pointer items-center border-s-2 border-transparent px-4 text-start text-caption transition-colors duration-150 hover:text-body"
 					>
-						<span>{icon}</span>
 						{label}
 					</button>
 				</li>
@@ -40,30 +38,34 @@ const modes = [
 </details>
 
 <style>
-	.icon {
+	/* Safari still paints the default disclosure triangle without this. */
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.state {
 		display: none;
 	}
 	/*
 	  `data-theme` lands on <html> before first paint, so the summary shows the
-	  right icon from the start instead of after the script runs.
+	  right state from the start instead of after the script runs.
 	*/
-	:global(html[data-theme='light']) .icon-light,
-	:global(html[data-theme='dark']) .icon-dark,
-	:global(html[data-theme='system']) .icon-system {
+	:global(html[data-theme='light']) .state-light,
+	:global(html[data-theme='dark']) .state-dark,
+	:global(html[data-theme='system']) .state-system {
 		display: inline;
 	}
 
-	/* Same reason: highlight the active option without waiting on JavaScript. */
+	/*
+	  Same reason: mark the active option without waiting on JavaScript. The 2px
+	  bar is the one accent moment in this control — the label itself just steps
+	  up the neutral ramp.
+	*/
 	:global(html[data-theme='light']) .option[data-mode='light'],
 	:global(html[data-theme='dark']) .option[data-mode='dark'],
 	:global(html[data-theme='system']) .option[data-mode='system'] {
-		font-weight: 500;
-		color: var(--color-gray-900);
-	}
-	:global(html.dark[data-theme='light']) .option[data-mode='light'],
-	:global(html.dark[data-theme='dark']) .option[data-mode='dark'],
-	:global(html.dark[data-theme='system']) .option[data-mode='system'] {
-		color: var(--color-gray-100);
+		border-inline-start-color: var(--color-accent);
+		color: var(--color-title);
 	}
 </style>
 

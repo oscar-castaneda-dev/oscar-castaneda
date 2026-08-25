@@ -1,6 +1,6 @@
 ---
 name: nothing-design
-description: This skill should be used when the user explicitly says "Nothing style", "Nothing design", "/nothing-design", or directly asks to use/apply the Nothing design system. NEVER trigger automatically for generic UI or design tasks.
+description: The design system for this site — read it before ANY visual work here: writing or editing markup, classes, styles or tokens; adding a page, layout or component; choosing a colour, font, size or spacing. Also when the user says "Nothing style", "Nothing design", or "/nothing-design".
 ---
 
 # Nothing-Inspired UI/UX Design System
@@ -87,21 +87,25 @@ In a monochrome system, the gray scale IS the hierarchy. Max 4 levels per screen
 | Token | Tailwind | Dark | Light | Use |
 | --- | --- | --- | --- | --- |
 | `--title` | `text-title` | `#FFFFFF` | `#000000` | Hero numbers, headlines. One per screen. |
-| `--body` | `text-body` | `#E8E8E8` | `#1A1A1A` | Body text, primary content. |
-| `--caption` | `text-caption` | `#999999` | `#666666` | Labels, captions, metadata. |
-| `--disabled` | `text-disabled` | `#666666` | `#999999` | Disabled, timestamps, hints. |
+| `--body` | `text-body` | `#E8E8E8` | `#1A1818` | Body text, primary content. |
+| `--caption` | `text-caption` | `#999999` | `#656161` | Labels, captions, metadata. |
+| `--disabled` | `text-disabled` | `#666666` | `#969292` | Disabled, timestamps, hints. |
 
 Reach for the token, never a raw gray or a Tailwind default (`text-gray-500`). Contrast between levels must survive **both** modes: a step that reads in dark can collapse in light, so check the pair, not one value.
 
-**Red (#D71921) is not part of the hierarchy.** It's an interrupt — "look HERE, NOW." If nothing is urgent, no red on the screen.
+**`--accent` is not part of the hierarchy.** On this site it is green (`#4A9E5C` dark / `#2F7A41` light) and it means exactly one thing: *this is the active one*. One element per screen, never decorative.
 
-**Data status colors** (success green, warning amber, accent red) are exempt from the "one accent" rule when encoding data values. Apply color to the **value itself**, not labels or row backgrounds. See `references/tokens.md` for the full color system.
+**Red is `--error` only** (`#D71921`, both modes) — a failure or a destructive action. It is not the accent here, so a screen showing red is a screen where something is wrong. If nothing is broken, no red.
+
+**Section palettes** are the other exemption: green for building, indigo for writing, one per page, and only as surface, border and marks — never as text. They encode *where you are*, not *what is urgent*. See `references/tokens.md`.
+
+**Data status colors** (success green, warning amber, error red) are exempt from the "one accent" rule when encoding data values. Apply color to the **value itself**, not labels or row backgrounds. See `references/tokens.md` for the full color system.
 
 ### 2.6 Consistency vs. Variance
 
 **Be consistent in:** Font families, label treatment (always Space Mono ALL CAPS), spacing rhythm, color roles, component shapes, alignment.
 
-**Break the pattern in exactly ONE place per screen:** An oversized number, a circular widget among rectangles, a red accent among grays, a Doto headline, a vast gap where everything else is tight.
+**Break the pattern in exactly ONE place per screen:** An oversized number, a circular widget among rectangles, the green accent among grays, a Doto headline, a vast gap where everything else is tight.
 
 This single break IS the design. Without it: sterile grid. With more than one: visual chaos.
 
@@ -121,7 +125,7 @@ Balance heavy elements with more empty space, not with more heavy elements.
 2. **Precision in the small things.** Letter-spacing, exact gray values, 4px gaps. Micro-decisions compound into craft.
 3. **Data as beauty.** `36GB/s` in Space Mono at 48px IS the visual. No illustrations needed.
 4. **Mechanical honesty.** Controls look like controls. A toggle = physical switch. A gauge = instrument.
-5. **One moment of surprise.** A dot-matrix headline. A circular widget. A red dot. Restraint makes the one expressive moment powerful.
+5. **One moment of surprise.** A dot-matrix headline. A circular widget. A green dot. Restraint makes the one expressive moment powerful.
 6. **Percussive, not fluid.** Imagine UI sounds: click not swoosh, tick not chime. Design transitions that feel mechanical and precise.
 
 ### 2.9 Visual Variety in Data-Dense Screens

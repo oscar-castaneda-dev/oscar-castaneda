@@ -15,7 +15,7 @@
 | Primary     | `--title` (inverted)    | none                    | `--surface`    | 999px (pill) |
 | Secondary   | transparent             | `1px solid --outline`   | `--body`       | 999px        |
 | Ghost       | transparent             | none                    | `--caption`    | 0            |
-| Destructive | transparent             | `1px solid --accent`    | `--accent`     | 999px        |
+| Destructive | transparent             | `1px solid --error`     | `--error`      | 999px        |
 
 All buttons: `Space Mono`, 13px, ALL CAPS, letter-spacing 0.06em, padding 12px 24px. Min height 44px.
 
@@ -25,7 +25,7 @@ All buttons: `Space Mono`, 13px, ALL CAPS, letter-spacing 0.06em, padding 12px 2
 
 - Underline preferred (`1px solid --outline` bottom) or full border 8px radius
 - Label above: `--label` style (Space Mono, ALL CAPS, `--caption`)
-- Focus: border → `--body`. Error: border → `--accent`, message below in `--accent`
+- Focus: border → `--body`. Error: border → `--error`, message below in `--error`
 - Data-entry fields: `Space Mono` for input text
 
 ---
@@ -102,7 +102,7 @@ The signature data visualization. Discrete blocks — mechanical, instrument-lik
 | State      | Fill             | When                |
 | ---------- | ---------------- | ------------------- |
 | Neutral    | `--title` | Within normal range |
-| Over limit | `--accent`       | Exceeds target      |
+| Over limit | `--error`        | Exceeds target      |
 | Good       | `--success`      | Healthy range       |
 | Moderate   | `--warning`      | Caution zone        |
 
@@ -147,7 +147,7 @@ No shadows. Layering through background contrast and borders.
 
 ## 15. STATE PATTERNS
 
-- **Error:** Input border → `--accent` + message below. Form-level: summary box `1px solid --accent`. Inline: `[ERROR]` prefix. Never red backgrounds or alert banners.
+- **Error:** Input border → `--error` + message below. Form-level: summary box `1px solid --error`. Inline: `[ERROR]` prefix. Never red backgrounds or alert banners.
 - **Empty:** Centered, 96px+ padding. Headline `--caption`, 1 sentence description `--disabled`. Optional dot-matrix illustration. No mascots.
 - **Loading:** Segmented spinner (hardware-style), or segmented bar + percentage. No skeletons — use `[LOADING]` bracket text.
 - **Disabled:** Opacity 0.4 or `--disabled`. Borders fade to `--border`.
