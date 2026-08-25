@@ -3,7 +3,7 @@ import { type CollectionEntry } from 'astro:content';
 import DailyNote from '@/components/DailyNote.astro';
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/ui';
-import { getLangFromUrl, langParam, useTranslations } from '@/i18n/utils';
+import { getLangFromUrl, langParam, localizedPath, useTranslations } from '@/i18n/utils';
 import { getEntrySlug, getLocalizedEntries } from '@/lib/content';
 
 export async function getStaticPaths() {
@@ -32,6 +32,12 @@ const title = entry.data.title ?? entry.data.pubDate.toLocaleDateString(lang, { 
 	title={`${title} | ${t('daily.title')}`}
 	description={entry.data.description ?? t('daily.description')}
 >
+	<a
+		href={localizedPath(lang, 'daily')}
+		class="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+	>
+		&larr; {t('daily.title')}
+	</a>
 	<DailyNote entry={entry} headingLevel="h1" />
 </Layout>
 

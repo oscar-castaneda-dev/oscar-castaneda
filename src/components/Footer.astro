@@ -1,5 +1,13 @@
 ---
-const today = new Date();
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
 ---
 
-<footer class="border">Footer {today.getFullYear()}</footer>
+<footer class="border-t border-gray-200 dark:border-gray-800">
+	<div class="mx-auto max-w-2xl px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
+		&copy; {year} {t('site.name')}. {t('footer.rights')}
+	</div>
+</footer>

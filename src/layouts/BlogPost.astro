@@ -12,28 +12,38 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} image={heroImage}>
 	<article>
-		<div>
-			{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-		</div>
-		<div>
-			<div>
-				<div>
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<div>
-								{t('blog.updatedOn')} <FormattedDate date={updatedDate} />
-							</div>
-						)
-					}
-				</div>
-				<h1>{title}</h1>
-				<hr />
-			</div>
+		{
+			heroImage && (
+				<Image
+					width={1020}
+					height={510}
+					src={heroImage}
+					alt=""
+					class="mb-8 aspect-2/1 w-full rounded-lg object-cover"
+				/>
+			)
+		}
+
+		<header class="border-b border-gray-200 pb-6 dark:border-gray-800">
+			<h1 class="text-3xl font-bold tracking-tight">{title}</h1>
+			<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+				<FormattedDate date={pubDate} />
+				{
+					updatedDate && (
+						<span class="italic">
+							{' · '}
+							{t('blog.updatedOn')} <FormattedDate date={updatedDate} />
+						</span>
+					)
+				}
+			</p>
+		</header>
+
+		{/* `prose` styles the Markdown body, which Tailwind's reset would otherwise strip bare. */}
+		<div class="prose prose-gray dark:prose-invert mt-8 max-w-none">
 			<slot />
 		</div>
 	</article>
 </Layout>
-

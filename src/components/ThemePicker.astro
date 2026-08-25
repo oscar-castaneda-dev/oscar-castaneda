@@ -1,0 +1,134 @@
+---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const modes = [
+	{ mode: 'light', icon: '☀️', label: t('theme.light') },
+	{ mode: 'dark', icon: '🌙', label: t('theme.dark') },
+	{ mode: 'system', icon: '💻', label: t('theme.system') },
+] as const;
+---
+
+<details class="theme-picker relative" data-dropdown>
+	<summary
+		aria-label={t('theme.label')}
+		class="cursor-pointer list-none rounded border border-gray-300 px-2 py-1 text-sm leading-none hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
+	>
+		{modes.map(({ mode, icon }) => <span class:list={['icon', `icon-${mode}`]}>{icon}</span>)}
+	</summary>
+
+	<ul
+		class="absolute end-0 z-10 mt-1 min-w-32 rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+	>
+		{
+			modes.map(({ mode, icon, label }) => (
+				<li>
+					<button
+						type="button"
+						data-mode={mode}
+						class="option flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-start text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+					>
+						<span>{icon}</span>
+						{label}
+					</button>
+				</li>
+			))
+		}
+	</ul>
+</details>
+
+<style>
+	.icon {
+		display: none;
+	}
+	/*
+	  `data-theme` lands on <html> before first paint, so the summary shows the
+	  right icon from the start instead of after the script runs.
+	*/
+	:global(html[data-theme='light']) .icon-light,
+	:global(html[data-theme='dark']) .icon-dark,
+	:global(html[data-theme='system']) .icon-system {
+		display: inline;
+	}
+
+	/* Same reason: highlight the active option without waiting on JavaScript. */
+	:global(html[data-theme='light']) .option[data-mode='light'],
+	:global(html[data-theme='dark']) .option[data-mode='dark'],
+	:global(html[data-theme='system']) .option[data-mode='system'] {
+		font-weight: 500;
+		color: var(--color-gray-900);
+	}
+	:global(html.dark[data-theme='light']) .option[data-mode='light'],
+	:global(html.dark[data-theme='dark']) .option[data-mode='dark'],
+	:global(html.dark[data-theme='system']) .option[data-mode='system'] {
+		color: var(--color-gray-100);
+	}
+</style>
+
+<script>
+	import '@/scripts/dropdown';
+
+	const MODES = ['light', 'dark', 'system'] as const;
+	type Mode = (typeof MODES)[number];
+
+	const picker = document.querySelector<HTMLDetailsElement>('.theme-picker');
+	const root = document.documentElement;
+	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+	function currentMode(): Mode {
+		const mode = root.dataset.theme;
+		return MODES.includes(mode as Mode) ? (mode as Mode) : 'system';
+	}
+
+	/** "system" has no colour of its own — it defers to the OS setting. */
+	function resolvesToDark(mode: Mode): boolean {
+		return mode === 'dark' || (mode === 'system' && prefersDark.matches);
+	}
+
+	function syncPressed(mode: Mode) {
+		for (const option of picker?.querySelectorAll<HTMLButtonElement>('.option') ?? []) {
+			option.setAttribute('aria-pressed', String(option.dataset.mode === mode));
+		}
+	}
+
+	function apply(mode: Mode) {
+		root.dataset.theme = mode;
+		root.classList.toggle('dark', resolvesToDark(mode));
+		syncPressed(mode);
+		try {
+			// Storing nothing *is* the "system" state, which is what the inline script reads.
+			if (mode === 'system') localStorage.removeItem('theme');
+			else localStorage.setItem('theme', mode);
+		} catch {
+			// Storage can be unavailable (private mode); the theme still applies for this page.
+		}
+	}
+
+	syncPressed(currentMode());
+
+	picker?.addEventListener('click', (event) => {
+		const option = (event.target as HTMLElement).closest<HTMLButtonElement>('.option');
+		const mode = option?.dataset.mode as Mode | undefined;
+		if (!mode) return;
+
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const commit = () => {
+			apply(mode);
+			picker.open = false;
+		};
+
+		// `startViewTransition` cross-fades the whole page instead of snapping colours.
+		if (document.startViewTransition && !reducedMotion) {
+			document.startViewTransition(commit);
+		} else {
+			commit();
+		}
+	});
+
+	// While on "system", follow the OS if it changes with the page still open.
+	prefersDark.addEventListener('change', () => {
+		if (currentMode() === 'system') apply('system');
+	});
+</script>

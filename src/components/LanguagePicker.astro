@@ -1,0 +1,49 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { languages, type Lang } from '@/i18n/ui';
+import { getLangFromUrl, pathWithoutLang, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const path = pathWithoutLang(Astro.url);
+const entries = Object.entries(languages) as [Lang, string][];
+---
+
+{/* A <details> dropdown keeps the options as real links, so crawlers still follow them. */}
+<details class="language-picker relative" data-dropdown>
+	<summary
+		aria-label={t('nav.switchLanguage')}
+		class="cursor-pointer list-none rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 hover:text-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-100"
+	>
+		{languages[lang]}
+	</summary>
+	<ul
+		class="absolute end-0 z-10 mt-1 min-w-32 rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+	>
+		{
+			entries.map(([code, label]) => (
+				<li>
+					<a
+						href={getRelativeLocaleUrl(code, path)}
+						hreflang={code}
+						aria-current={code === lang ? 'true' : undefined}
+						class="block px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 aria-[current=true]:font-medium aria-[current=true]:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:aria-[current=true]:text-gray-100"
+					>
+						{label}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</details>
+
+<style>
+	/* Safari still paints the default disclosure triangle without this. */
+	summary::-webkit-details-marker {
+		display: none;
+	}
+</style>
+
+<script>
+	import '@/scripts/dropdown';
+</script>

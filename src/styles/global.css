@@ -1,1 +1,24 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/*
+  Tailwind v4 ties `dark:` to the OS setting by default. Point it at a class on
+  <html> instead, so the toggle can override that preference.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Keeps native widgets (scrollbars, form controls) in sync with the theme. */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+/* The theme swap is cross-faded via the View Transitions API — honour reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

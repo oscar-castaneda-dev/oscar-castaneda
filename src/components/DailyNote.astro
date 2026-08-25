@@ -18,28 +18,32 @@ const href = localizedPath(lang, `daily/${getEntrySlug(entry)}`);
 const { title, pubDate, tags } = entry.data;
 ---
 
-<article>
+<article class="border-b border-gray-200 py-6 last:border-0 dark:border-gray-800">
 	<header>
-		<Heading>
-			<a href={href} title={t('daily.permalink')}>
+		<Heading class="text-lg font-medium">
+			<a
+				href={href}
+				title={t('daily.permalink')}
+				class="hover:text-blue-600 dark:hover:text-blue-400"
+			>
 				{title ?? <FormattedDate date={pubDate} />}
 			</a>
 		</Heading>
-		<p>
+		<p class="mt-1 flex flex-wrap items-baseline gap-x-3 text-sm text-gray-500 dark:text-gray-400">
+			{/* An untitled note already shows its date as the heading. */}
 			{title && <FormattedDate date={pubDate} />}
 			{
 				tags.length > 0 && (
-					<span>
+					<span class="flex flex-wrap gap-2">
 						{tags.map((tag) => (
-							<span>#{tag}</span>
+							<span class="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">#{tag}</span>
 						))}
 					</span>
 				)
 			}
 		</p>
 	</header>
-	<div>
+	<div class="prose prose-gray dark:prose-invert mt-3 max-w-none">
 		<Content />
 	</div>
 </article>
-
