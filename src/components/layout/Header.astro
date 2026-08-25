@@ -18,9 +18,8 @@ const current = Astro.url.pathname;
 ---
 
 <header class="border-b border-border">
-	{/* items-stretch so the picker cells can run the full height of the bar. */}
 	<div class="container flex items-stretch justify-between">
-		{/* The logo is the home link: `[ OC ]`, brackets drawn by CSS so they stay out of the DOM text. */}
+		<!-- LOGO -->
 		<a
 			href={localizedPath(lang)}
 			aria-label={t('nav.home')}
@@ -28,13 +27,12 @@ const current = Astro.url.pathname;
 		>
 			<span class="relative inline-block uppercase">
 				oc
-				{/* A border that fades in, rather than `underline`: no layout shift, no reflow on hover. */}
 				<span
 					class="absolute bottom-0 left-0 w-full border-b border-title opacity-0 transition-opacity duration-150 group-hover:opacity-100"
 				></span>
 			</span>
 		</a>
-
+		<!-- NAVIGATION -->
 		<div class="flex items-stretch">
 			<nav class="hidden items-center gap-6 py-6 pe-6 md:flex md:gap-8 md:pe-8">
 				{
@@ -52,11 +50,10 @@ const current = Astro.url.pathname;
 					))
 				}
 			</nav>
-
-			{/* No gap: the dividers on each cell do the separating. */}
+			<!-- LANGUAGE AND THEME PICKER -->
 			<LanguagePicker />
 			<ThemePicker />
-
+			<!-- MOBILE VIEW -->
 			<div class="flex items-center ps-4 md:hidden">
 				<MobileMenu links={links} />
 			</div>

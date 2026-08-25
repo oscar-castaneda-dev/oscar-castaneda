@@ -11,29 +11,23 @@ const t = useTranslations(lang);
 const current = Astro.url.pathname;
 ---
 
-{/* Burger: three hairlines, no icon font, no SVG. */}
+<!-- BURGER MENU -->
 <button
 	type="button"
 	class="mobile-menu-open flex cursor-pointer flex-col justify-center gap-1.5 p-1 md:hidden"
 	aria-label={t('nav.openMenu')}
 	aria-expanded="false"
 	aria-controls="mobile-drawer"
+	popovertarget="mobile-drawer"
 >
 	<span class="block h-px w-5 bg-title"></span>
 	<span class="block h-px w-5 bg-title"></span>
 	<span class="block h-px w-5 bg-title"></span>
 </button>
-
-{/*
-  The drawer ships closed and inert, parked one screen to the side. Toggling
-  classes (not `hidden`) keeps the slide animation alive in both directions.
-*/}
-<div
-	id="mobile-drawer"
-	class="mobile-drawer pointer-events-none fixed inset-0 z-50 flex translate-x-full flex-col bg-surface transition-transform duration-300 ease-out motion-reduce:transition-none md:hidden"
-	inert
->
+<!-- MOBILE CONTAINER -->
+<div id="mobile-drawer" class="mobile-drawer fixed inset-0 flex flex-col bg-surface md:hidden" popover>
 	<div class="container flex items-center justify-between border-b border-border py-6">
+		<!-- LOGO -->
 		<a
 			href={localizedPath(lang)}
 			aria-label={t('nav.home')}
@@ -46,16 +40,19 @@ const current = Astro.url.pathname;
 				></span>
 			</span>
 		</a>
-
+		<!-- CLOSE MODAL -->
 		<button
 			type="button"
-			class="mobile-menu-close cursor-pointer font-nothing-subtitle text-caption transition-colors duration-150 hover:text-title"
+			class="cursor-pointer font-nothing-subtitle text-caption transition-colors duration-150 hover:text-title"
 			aria-label={t('nav.closeMenu')}
+			popovertarget="mobile-drawer"
+			popovertargetaction="hide"
+			autofocus
 		>
 			[{t('nav.close')}]
 		</button>
 	</div>
-
+	<!-- NAVIGATION -->
 	<nav class="container flex flex-col gap-10 pt-16">
 		{
 			links.map(({ href, label }) => (
@@ -76,36 +73,48 @@ const current = Astro.url.pathname;
 	</nav>
 </div>
 
+<style>
+	.mobile-drawer {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		border: 0;
+		padding: 0;
+		translate: 100% 0;
+		transition:
+			translate 300ms ease-out,
+			display 300ms allow-discrete,
+			overlay 300ms allow-discrete;
+	}
+
+	.mobile-drawer:popover-open {
+		translate: 0 0;
+	}
+
+	@starting-style {
+		.mobile-drawer:popover-open {
+			translate: 100% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mobile-drawer {
+			transition: none;
+		}
+	}
+</style>
+
 <script>
 	const opener = document.querySelector<HTMLButtonElement>('.mobile-menu-open');
-	const closer = document.querySelector<HTMLButtonElement>('.mobile-menu-close');
 	const drawer = document.querySelector<HTMLElement>('.mobile-drawer');
 
-	function setOpen(open: boolean) {
-		if (!drawer || !opener) return;
-
-		drawer.classList.toggle('translate-x-full', !open);
-		drawer.classList.toggle('pointer-events-none', !open);
-		// `inert` keeps the offscreen panel out of the tab order and the a11y tree.
-		drawer.toggleAttribute('inert', !open);
-		opener.setAttribute('aria-expanded', String(open));
-		// The page behind must not scroll while the drawer covers it.
+	drawer?.addEventListener('toggle', (event) => {
+		const open = (event as ToggleEvent).newState === 'open';
 		document.body.classList.toggle('overflow-hidden', open);
-
-		if (open) closer?.focus();
-		else opener.focus();
-	}
-
-	opener?.addEventListener('click', () => setOpen(true));
-	closer?.addEventListener('click', () => setOpen(false));
-
-	document.addEventListener('keydown', (event) => {
-		if (event.key === 'Escape') setOpen(false);
+		opener?.setAttribute('aria-expanded', String(open));
 	});
 
-	// A link inside the drawer navigates away; close first so a bfcache restore
-	// (the back button) does not bring the page back with the drawer still open.
-	for (const link of drawer?.querySelectorAll('a') ?? []) {
-		link.addEventListener('click', () => setOpen(false));
-	}
+	drawer?.addEventListener('click', (event) => {
+		if ((event.target as HTMLElement).closest('a')) drawer.hidePopover();
+	});
 </script>
