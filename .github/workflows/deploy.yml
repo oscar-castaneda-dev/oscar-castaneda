@@ -1,0 +1,82 @@
+name: Deploy Astro site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.13.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Verify pnpm version
+        run: pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro site
+        run: pnpm build
+
+      - name: Configure SSH
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh-keyscan \
+            -p "$SERVER_PORT" \
+            -H "$SERVER_HOST" \
+            >> ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy with rsync
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PATH: ${{ secrets.SERVER_PATH }}
+        run: |
+          rsync \
+            --recursive \
+            --links \
+            --times \
+            --compress \
+            --delete \
+            --human-readable \
+            --itemize-changes \
+            --omit-dir-times \
+            --no-perms \
+            --no-owner \
+            --no-group \
+            -e "ssh -i ~/.ssh/deploy_key -p $SERVER_PORT" \
+            dist/ \
+            "$SERVER_USER@$SERVER_HOST:$SERVER_PATH/"

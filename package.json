@@ -2,8 +2,9 @@
   "name": "oscar-castaneda",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@11.23.0",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   },
   "scripts": {
     "dev": "astro dev",
