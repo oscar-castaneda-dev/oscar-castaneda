@@ -25,8 +25,14 @@ Inside of your Astro project, you'll see the following folders and files:
 │   ├── assets/
 │   ├── components/
 │   ├── content/
+│   │   └── blog/
+│   │       ├── en/
+│   │       └── es/
+│   ├── i18n/
 │   ├── layouts/
+│   ├── lib/
 │   └── pages/
+│       └── [lang]/
 ├── astro.config.mjs
 ├── README.md
 ├── package.json
@@ -40,6 +46,15 @@ There's nothing special about `src/components/`, but that's where we like to put
 The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
 
 Any static assets, like images, can be placed in the `public/` directory.
+
+## 🌍 Internationalization
+
+The site uses [Astro's built-in i18n routing](https://docs.astro.build/en/guides/internationalization/), configured in `astro.config.mjs` with `en` as the default locale and `es` alongside it. Every locale is prefixed (`prefixDefaultLocale: true`), so URLs look like `/en/blog/` and `/es/blog/`; a static `/` page redirects to the default locale.
+
+- **UI strings** live in `src/i18n/ui.ts`. Add a locale by extending `languages` and `ui`, then listing it in `i18n.locales` in `astro.config.mjs`.
+- **Helpers** live in `src/i18n/utils.ts`: `getLangFromUrl()`, `useTranslations()`, `localizedPath()`, and `getLangStaticPaths()` for the `[lang]` routes.
+- **Blog posts** are grouped by locale in `src/content/blog/<lang>/`. Keeping the same file name across locales makes the language switcher land on the translated post. `src/lib/blog.ts` filters the collection by locale and strips the locale prefix from the slug.
+- **Pages** live under `src/pages/[lang]/` and export `getStaticPaths`, so one file renders every locale. Each locale gets its own feed at `/<lang>/rss.xml`, and every page emits `hreflang` alternates.
 
 ## 🧞 Commands
 

@@ -3,9 +3,11 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import FallbackImage from '../assets/blog-placeholder-1.jpg';
-import { SITE_TITLE } from '../consts';
 import { Font } from 'astro:assets';
+import { getAbsoluteLocaleUrl } from 'astro:i18n';
+import FallbackImage from '../assets/blog-placeholder-1.jpg';
+import { defaultLang, languages, type Lang } from '../i18n/ui';
+import { getLangFromUrl, pathWithoutLang, useTranslations } from '../i18n/utils';
 
 interface Props {
 	title: string;
@@ -16,6 +18,16 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = FallbackImage } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const path = pathWithoutLang(Astro.url);
+const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
+	code,
+	href: getAbsoluteLocaleUrl(code, path),
+}));
+// `getAbsoluteLocaleUrl` appends a trailing slash, which a file URL must not have.
+const rssURL = getAbsoluteLocaleUrl(lang, 'rss.xml').replace(/\/$/, '');
 ---
 
 <!-- Global Metadata -->
@@ -27,8 +39,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 <link
 	rel="alternate"
 	type="application/rss+xml"
-	title={SITE_TITLE}
-	href={new URL('rss.xml', Astro.site)}
+	title={t('site.title')}
+	href={rssURL}
 />
 <meta name="generator" content={Astro.generator} />
 
@@ -36,6 +48,10 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- Alternate languages -->
+{alternates.map(({ code, href }) => <link rel="alternate" hreflang={code} href={href} />)}
+<link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLang, path)} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
@@ -47,6 +63,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image.src, Astro.url)} />
+<meta property="og:locale" content={lang} />
+{
+	alternates
+		.filter(({ code }) => code !== lang)
+		.map(({ code }) => <meta property="og:locale:alternate" content={code} />)
+}
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />

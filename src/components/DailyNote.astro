@@ -1,0 +1,85 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { getLangFromUrl, localizedPath, useTranslations } from '../i18n/utils';
+import { getEntrySlug } from '../lib/content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	entry: CollectionEntry<'daily'>;
+	/** `h1` on a note's own page, `h2` when listed among others. */
+	headingLevel?: 'h1' | 'h2';
+}
+
+const { entry, headingLevel: Heading = 'h2' } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { Content } = await render(entry);
+const href = localizedPath(lang, `daily/${getEntrySlug(entry)}`);
+const { title, pubDate, tags } = entry.data;
+---
+
+<article class="note">
+	<header>
+		<Heading class="note-title">
+			<a href={href} title={t('daily.permalink')}>
+				{title ?? <FormattedDate date={pubDate} />}
+			</a>
+		</Heading>
+		<p class="meta">
+			{/* Untitled notes already show the date as their heading. */}
+			{title && <FormattedDate date={pubDate} />}
+			{
+				tags.length > 0 && (
+					<span class="tags">
+						{tags.map((tag) => (
+							<span class="tag">#{tag}</span>
+						))}
+					</span>
+				)
+			}
+		</p>
+	</header>
+	<div class="note-body">
+		<Content />
+	</div>
+</article>
+
+<style>
+	.note {
+		padding: 1.5em 0;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+	.note:last-child {
+		border-bottom: none;
+	}
+	.note-title {
+		margin: 0;
+		font-size: 1.4em;
+		line-height: 1.2;
+	}
+	.note-title a {
+		color: rgb(var(--black));
+		text-decoration: none;
+	}
+	.note-title a:hover {
+		color: rgb(var(--accent));
+	}
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75em;
+		align-items: baseline;
+		margin: 0.35em 0 0 0;
+		color: rgb(var(--gray));
+		font-size: 0.9em;
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	.note-body :global(> :last-child) {
+		margin-bottom: 0;
+	}
+</style>

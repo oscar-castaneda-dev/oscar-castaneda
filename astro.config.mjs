@@ -7,7 +7,29 @@ import { defineConfig, fontProviders } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+	i18n: {
+		locales: ['en', 'es'],
+		defaultLocale: 'en',
+		routing: {
+			prefixDefaultLocale: true,
+			redirectToDefaultLocale: true,
+		},
+	},
+	// `redirectToDefaultLocale` relies on the i18n middleware, which does not run
+	// for a fully static build. This emits a static `/` page that forwards to the
+	// default locale so the bare domain keeps working.
+	redirects: {
+		'/': '/en/',
+	},
+	integrations: [
+		mdx(),
+		sitemap({
+			i18n: {
+				defaultLocale: 'en',
+				locales: { en: 'en', es: 'es' },
+			},
+		}),
+	],
 	fonts: [
 		{
 			provider: fontProviders.local(),

@@ -1,0 +1,28 @@
+---
+import { type CollectionEntry, render } from 'astro:content';
+import { languages, type Lang } from '../../../i18n/ui';
+import BlogPost from '../../../layouts/BlogPost.astro';
+import { getEntrySlug, getLocalizedEntries } from '../../../lib/content';
+
+export async function getStaticPaths() {
+	const langs = Object.keys(languages) as Lang[];
+	const paths = await Promise.all(
+		langs.map(async (lang) => {
+			const posts = await getLocalizedEntries('blog', lang);
+			return posts.map((post) => ({
+				params: { lang, slug: getEntrySlug(post) },
+				props: post,
+			}));
+		}),
+	);
+	return paths.flat();
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<BlogPost {...post.data}>
+	<Content />
+</BlogPost>

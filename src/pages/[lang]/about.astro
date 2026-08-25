@@ -1,11 +1,17 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import AboutHeroImage from '../../assets/blog-placeholder-about.jpg';
+import { getLangFromUrl, getLangStaticPaths, useTranslations } from '../../i18n/utils';
+import Layout from '../../layouts/BlogPost.astro';
+
+export const getStaticPaths = getLangStaticPaths;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
+	title={t('about.title')}
+	description={t('about.description')}
 	pubDate={new Date('August 08 2021')}
 	heroImage={AboutHeroImage}
 >

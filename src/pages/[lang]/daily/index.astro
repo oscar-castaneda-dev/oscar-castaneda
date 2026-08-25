@@ -1,0 +1,53 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import DailyNote from '../../../components/DailyNote.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import { getLangFromUrl, getLangStaticPaths, useTranslations } from '../../../i18n/utils';
+import { getLocalizedEntries } from '../../../lib/content';
+
+export const getStaticPaths = getLangStaticPaths;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const notes = await getLocalizedEntries('daily', lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={`${t('daily.title')} | ${t('site.title')}`} description={t('daily.description')} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>{t('daily.title')}</h1>
+			<p class="intro">{t('daily.description')}</p>
+			{
+				notes.length > 0 ? (
+					notes.map((entry) => <DailyNote entry={entry} />)
+				) : (
+					<p>{t('daily.empty')}</p>
+				)
+			}
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 720px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 3em 1em;
+		color: rgb(var(--gray-dark));
+	}
+	h1 {
+		margin: 0;
+	}
+	.intro {
+		margin: 0.5em 0 2em 0;
+		color: rgb(var(--gray));
+	}
+</style>
