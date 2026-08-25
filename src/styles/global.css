@@ -84,6 +84,15 @@
   --font-display: var(--font-doto);
 }
 
+/*
+  The header runs out of room well before `md`: four nav links plus the language
+  and theme pickers stop fitting around 940px, so the drawer takes over there.
+  Its own breakpoint, because it tracks the header's contents, not the page.
+*/
+@theme {
+  --breakpoint-menu: 940px;
+}
+
 html {
   color-scheme: light;
 }

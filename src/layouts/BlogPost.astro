@@ -12,7 +12,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title={title} description={description} image={heroImage}>
+<Layout title={title} description={description} image={heroImage} class="container py-12">
 	{/* The page rail is wide; a column of prose is not. The measure stops here. */}
 	<article class="mx-auto max-w-2xl">
 		{

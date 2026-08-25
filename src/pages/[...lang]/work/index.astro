@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 const projects = await getLocalizedEntries('work', lang);
 ---
 
-<Layout title={`${t('work.title')} | ${t('site.title')}`} description={t('work.description')}>
+<Layout title={`${t('work.title')} | ${t('site.title')}`} description={t('work.description')} class="container py-12">
 	<div class="mx-auto max-w-2xl">
 		<h1 class="heading-44">{t('work.title')}</h1>
 		<p class="mt-6 text-body">{t('work.description')}</p>

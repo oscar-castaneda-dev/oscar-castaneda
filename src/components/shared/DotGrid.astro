@@ -1,0 +1,173 @@
+---
+interface Props {
+	fade?: boolean;
+	class?: string;
+}
+
+const { fade = true, class: className } = Astro.props;
+---
+
+<canvas
+	data-dot-grid
+	data-fade={fade ? '' : undefined}
+	aria-hidden="true"
+	class:list={[
+		'dot-grid-canvas pointer-events-none absolute inset-0',
+		'text-disabled dark:text-outline',
+		className,
+	]}></canvas>
+
+<style>
+	.dot-grid-canvas[data-fade] {
+		mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+	}
+</style>
+
+<script>
+	interface Dot {
+		startX: number;
+		startY: number;
+		x: number;
+		y: number;
+		vx: number;
+		vy: number;
+	}
+
+	const SPACING = 16;
+	const RADIUS = 1;
+	const POINTER_R = 80;
+	const POINTER_R_SQ = POINTER_R * POINTER_R;
+	const PUSH = 6;
+	const SPRING = 0.1;
+	const FRICTION = 0.72;
+	const AT_REST = 0.05;
+	const OFFSCREEN = -9999;
+
+	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+	const repaints: (() => void)[] = [];
+
+	function setup(canvas: HTMLCanvasElement) {
+		const parent = canvas.parentElement;
+		const ctx = canvas.getContext('2d');
+		if (!parent || !ctx) return;
+
+		let dots: Dot[] = [];
+		let width = 0;
+		let height = 0;
+		let color = '';
+		let pointerX = OFFSCREEN;
+		let pointerY = OFFSCREEN;
+		let pointerActive = false;
+		let running = false;
+
+		const readColor = () => {
+			color = getComputedStyle(canvas).color;
+		};
+
+		const draw = () => {
+			ctx.clearRect(0, 0, width, height);
+			ctx.fillStyle = color;
+			ctx.beginPath();
+			for (const dot of dots) {
+				ctx.moveTo(dot.x + RADIUS, dot.y);
+				ctx.arc(dot.x, dot.y, RADIUS, 0, Math.PI * 2);
+			}
+			ctx.fill();
+		};
+
+		const tick = () => {
+			let moving = pointerActive;
+
+			for (const dot of dots) {
+				const dx = dot.x - pointerX;
+				const dy = dot.y - pointerY;
+				const distSq = dx * dx + dy * dy;
+
+				if (pointerActive && distSq < POINTER_R_SQ && distSq > 0) {
+					const dist = Math.sqrt(distSq);
+					const force = (1 - dist / POINTER_R) * PUSH;
+					dot.vx += (dx / dist) * force;
+					dot.vy += (dy / dist) * force;
+				}
+
+				dot.vx += (dot.startX - dot.x) * SPRING;
+				dot.vy += (dot.startY - dot.y) * SPRING;
+				dot.vx *= FRICTION;
+				dot.vy *= FRICTION;
+				dot.x += dot.vx;
+				dot.y += dot.vy;
+
+				if (Math.abs(dot.vx) > AT_REST || Math.abs(dot.vy) > AT_REST) moving = true;
+			}
+
+			draw();
+
+			if (moving) requestAnimationFrame(tick);
+			else running = false;
+		};
+
+		const start = () => {
+			if (running || reducedMotion.matches) return;
+			running = true;
+			requestAnimationFrame(tick);
+		};
+
+		const resize = () => {
+			const rect = parent.getBoundingClientRect();
+			width = rect.width;
+			height = rect.height;
+			if (!width || !height) return;
+
+			const dpr = Math.min(window.devicePixelRatio || 1, 2);
+			canvas.width = Math.round(width * dpr);
+			canvas.height = Math.round(height * dpr);
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+			dots = [];
+			for (let y = SPACING / 2; y < height; y += SPACING) {
+				for (let x = SPACING / 2; x < width; x += SPACING) {
+					dots.push({ startX: x, startY: y, x, y, vx: 0, vy: 0 });
+				}
+			}
+			draw();
+		};
+
+		const onPointerMove = (event: PointerEvent) => {
+			if (reducedMotion.matches) return;
+			const rect = canvas.getBoundingClientRect();
+			pointerX = event.clientX - rect.left;
+			pointerY = event.clientY - rect.top;
+			pointerActive = true;
+			start();
+		};
+
+		const release = () => {
+			pointerActive = false;
+			pointerX = OFFSCREEN;
+			pointerY = OFFSCREEN;
+			start();
+		};
+
+		readColor();
+		repaints.push(() => {
+			readColor();
+			draw();
+		});
+
+		new ResizeObserver(resize).observe(parent);
+
+		parent.addEventListener('pointermove', onPointerMove, { passive: true });
+		parent.addEventListener('pointerleave', release, { passive: true });
+		parent.addEventListener('pointercancel', release, { passive: true });
+	}
+
+	for (const canvas of document.querySelectorAll<HTMLCanvasElement>('canvas[data-dot-grid]')) {
+		setup(canvas);
+	}
+
+	if (repaints.length) {
+		new MutationObserver(() => {
+			for (const repaint of repaints) repaint();
+		}).observe(document.documentElement, { attributeFilter: ['class'] });
+	}
+</script>

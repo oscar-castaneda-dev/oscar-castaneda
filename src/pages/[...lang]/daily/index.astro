@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 const notes = await getLocalizedEntries('daily', lang);
 ---
 
-<Layout title={`${t('daily.title')} | ${t('site.title')}`} description={t('daily.description')}>
+<Layout title={`${t('daily.title')} | ${t('site.title')}`} description={t('daily.description')} class="container py-12">
 	<div class="mx-auto max-w-2xl">
 		<h1 class="text-3xl font-bold tracking-tight">{t('daily.title')}</h1>
 		<p class="mt-3 text-gray-600 dark:text-gray-400">{t('daily.description')}</p>

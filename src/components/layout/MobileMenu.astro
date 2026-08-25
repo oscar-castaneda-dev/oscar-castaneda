@@ -14,7 +14,7 @@ const current = Astro.url.pathname;
 <!-- BURGER MENU -->
 <button
 	type="button"
-	class="mobile-menu-open flex cursor-pointer flex-col justify-center gap-1.5 p-1 md:hidden"
+	class="mobile-menu-open flex cursor-pointer flex-col justify-center gap-1.5 p-1 menu:hidden"
 	aria-label={t('nav.openMenu')}
 	aria-expanded="false"
 	aria-controls="mobile-drawer"
@@ -25,7 +25,7 @@ const current = Astro.url.pathname;
 	<span class="block h-px w-5 bg-title"></span>
 </button>
 <!-- MOBILE CONTAINER -->
-<div id="mobile-drawer" class="mobile-drawer fixed inset-0 flex flex-col bg-surface md:hidden" popover>
+<div id="mobile-drawer" class="mobile-drawer fixed inset-0 flex flex-col bg-surface menu:hidden" popover>
 	<div class="container flex items-center justify-between border-b border-border py-6">
 		<!-- LOGO -->
 		<a

@@ -43,10 +43,12 @@ const lang = getLangFromUrl(Astro.url);
 	>
 		<Header />
 		{/*
-		  The wide grid is the default so the header, the content and the footer
-		  share one rail. Prose constrains its own measure — see BlogPost.
+		  Bare on purpose: a hero paints to the edge of the window, so `main` can
+		  impose no rail of its own. A page that wants one asks for it with
+		  `class="container py-12"`; a full-bleed page passes nothing and each of
+		  its sections carries its own `container` for the text.
 		*/}
-		<main class:list={['container grow py-12', mainClass]}>
+		<main class:list={['grow', mainClass]}>
 			<slot />
 		</main>
 		<Footer />

@@ -1,5 +1,5 @@
 ---
-import Counter from '@/components/shared/Counter';
+import HomeHero from '@/components/home/HomeHero.astro';
 import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl, getLangStaticPaths, useTranslations } from '@/i18n/utils';
 
@@ -10,9 +10,5 @@ const t = useTranslations(lang);
 ---
 
 <Layout title={t('site.title')} description={t('site.description')}>
-	<div class="mx-auto max-w-2xl">
-		<h1 class="text-3xl font-bold tracking-tight">{t('home.heading')}</h1>
-		<p class="mt-3 text-gray-600 dark:text-gray-400">{t('home.intro')}</p>
-		<Counter client:load />
-	</div>
+	<HomeHero />
 </Layout>

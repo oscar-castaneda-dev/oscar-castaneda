@@ -198,4 +198,9 @@ Steps move in multiples of 8 from `--space-sm` up; 4px and 2px exist only for ti
 
 Usage in `.astro`: `<div class="dot-grid pointer-events-none absolute ... opacity-20" aria-hidden="true" />`
 
+**Two implementations, and they are not interchangeable.** The `dot-grid` utility above is the
+default: a static background, no JavaScript, no cost. `shared/DotGrid.astro` is a canvas whose
+dots are pushed around by the pointer — reach for it only where that motion is the point, such
+as a hero. It ships script, so it is never the choice for plain decoration.
+
 Dots 1–2px, uniform 12–16px grid. Opacity 0.1–0.2 for backgrounds, full for data. Never as container border or button style. The dots read off `--color-outline`/`--color-border`, so they follow the theme automatically — but check the light mode: `#C9C6C6` dots on `#F3F2F2` at `opacity-20` are effectively invisible. In light mode raise the opacity (0.4–0.6) or step the colour down to `--caption`. Decorative dot grids are `aria-hidden`.

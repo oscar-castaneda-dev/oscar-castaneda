@@ -161,7 +161,7 @@ Lead section → heaviest treatment. Secondary → different form. Tertiary → 
 - Data visualization: differentiate with **opacity** (100%/60%/30%) or **pattern** (solid/striped/dotted) before introducing color.
 - No `@media (prefers-color-scheme: dark)` inside a component. The theme is class-driven (`.dark` on `<html>`); a media query ignores the user's manual choice. The OS preference is read in exactly two places: the pre-paint script in `Layout.astro` and the listener in `ThemePicker.astro`.
 - No raw grays (`text-gray-500`, `#333`) where a token exists. A hardcoded gray only works in one mode.
-- No colour applied after first paint by JavaScript — it flashes. Theme-dependent colour comes from a Tailwind class the `.dark` variant resolves.
+- No colour applied after first paint by JavaScript — it flashes. Theme-dependent colour comes from a Tailwind class the `.dark` variant resolves. The one exception is a `<canvas>`, which takes no class: it reads its colour back off the element and repaints on the theme swap. See `platform-mapping.md` Section 5.7.
 
 ---
 

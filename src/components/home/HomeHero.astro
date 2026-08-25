@@ -1,0 +1,43 @@
+---
+import ButtonLink from '@/components/shared/ButtonLink.astro';
+import DotGrid from '@/components/shared/DotGrid.astro';
+import { getLangFromUrl, localizedPath, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// The name breaks across two lines; the surname keeps whatever else is there.
+const [firstName, ...surname] = t('site.name').split(' ');
+
+const meta = [
+	// Green is the one accent on the page: it marks what Oscar is, not decoration.
+	{ label: t('home.roleLabel'), value: t('home.role'), tone: 'text-accent' },
+	{ label: t('home.locationLabel'), value: t('home.location'), tone: 'text-title' },
+	{ label: t('home.stackLabel'), value: t('home.stack'), tone: 'text-title' },
+];
+---
+
+{/*
+  The section is full-bleed — `relative` is what the dot grid measures and paints
+  into, so the dots run edge to edge. The inner `container` puts the text back on
+  the same rail as the header and the footer.
+*/}
+<section class="relative overflow-hidden py-24">
+	<DotGrid />
+	<div class="container relative z-10 space-y-6">
+		<p class="subtitle text-xl text-caption">// {t('home.tagline')}</p>
+		<h1 class="heading-64">{firstName}<br />{surname.join(' ')}</h1>
+		<p class="max-w-2xl text-body">{t('home.intro')}</p>
+		<ButtonLink href={localizedPath(lang, 'work')} class="mb-16">{t('home.viewWork')}</ButtonLink>
+		<div class="flex flex-col gap-6 border-t border-border py-6 md:flex-row md:gap-12">
+			{
+				meta.map(({ label, value, tone }) => (
+					<div class="flex flex-col gap-1">
+						<p class="subtitle text-xs text-caption">{label}</p>
+						<p class:list={['uppercase', tone]}>{value}</p>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>

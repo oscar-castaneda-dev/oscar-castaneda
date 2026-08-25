@@ -34,7 +34,7 @@ const current = Astro.url.pathname;
 		</a>
 		<!-- NAVIGATION -->
 		<div class="flex items-stretch">
-			<nav class="hidden items-center gap-6 py-6 pe-6 md:flex md:gap-8 md:pe-8">
+			<nav class="hidden items-center gap-6 py-6 pe-6 menu:flex menu:gap-8 menu:pe-8">
 				{
 					links.map(({ href, label }) => (
 						<a
@@ -54,7 +54,7 @@ const current = Astro.url.pathname;
 			<LanguagePicker />
 			<ThemePicker />
 			<!-- MOBILE VIEW -->
-			<div class="flex items-center ps-4 md:hidden">
+			<div class="flex items-center ps-4 menu:hidden">
 				<MobileMenu links={links} />
 			</div>
 		</div>

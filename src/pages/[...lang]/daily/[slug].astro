@@ -31,6 +31,7 @@ const title = entry.data.title ?? entry.data.pubDate.toLocaleDateString(lang, { 
 <Layout
 	title={`${title} | ${t('daily.title')}`}
 	description={entry.data.description ?? t('daily.description')}
+	class="container py-12"
 >
 	<div class="mx-auto max-w-2xl">
 		<a

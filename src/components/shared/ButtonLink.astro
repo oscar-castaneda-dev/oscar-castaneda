@@ -1,0 +1,43 @@
+---
+const sizes = {
+	lg: 'min-h-12 gap-2 px-8 py-4 text-sm tracking-[0.06em]',
+	md: 'min-h-11 gap-2 px-6 py-3 text-[13px] tracking-[0.06em]',
+	sm: 'min-h-9 gap-1 px-4 py-2 text-[11px] tracking-[0.08em]',
+} as const;
+
+const variants = {
+	primary: 'bg-title text-surface hover:bg-body',
+	secondary: 'border border-outline text-body hover:border-title hover:text-title',
+	ghost: 'text-caption hover:text-body',
+	destructive: 'border border-error text-error hover:bg-error hover:text-surface',
+} as const;
+
+interface Props {
+	href: string;
+	variant?: keyof typeof variants;
+	size?: keyof typeof sizes;
+	class?: string;
+	ariaLabel?: string;
+}
+
+const { href, variant = 'primary', size = 'md', class: className, ariaLabel } = Astro.props;
+
+const isMail = href.startsWith('mailto:');
+const isExternal = isMail || href.startsWith('http');
+---
+
+<a
+	href={href}
+	aria-label={ariaLabel}
+	target={isExternal && !isMail ? '_blank' : undefined}
+	rel={isExternal && !isMail ? 'noopener noreferrer' : undefined}
+	class:list={[
+		'inline-flex items-center justify-center font-nothing-code uppercase transition-colors duration-150',
+		variant === 'ghost' ? 'rounded-none' : 'rounded-full',
+		sizes[size],
+		variants[variant],
+		className,
+	]}
+>
+	<slot />
+</a>

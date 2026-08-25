@@ -58,9 +58,9 @@ Use `get_font_family_info` to verify fonts before writing styles. Direct hex val
 
 ---
 
-## 4. REACT / TAILWIND (ISLANDS)
+## 4. REACT / TAILWIND (OTHER PROJECTS)
 
-Token → utility reference for any React/Tailwind v4 target. Tokens live in the global stylesheet under `@theme`; pure black/white use Tailwind's built-ins, everything else is a custom color token. For this repo, font loading, token definitions and file locations are in **Section 5 — Astro**; the tables below still apply verbatim (swap `className` for `class` in `.astro` files).
+Token → utility reference for a React/Tailwind v4 target. **This repo ships no React** — it is here so the system can be lifted into a project that does. Tokens live in the global stylesheet under `@theme`; pure black/white use Tailwind's built-ins, everything else is a custom color token. For this repo, font loading, token definitions and file locations are in **Section 5 — Astro**; the tables below still apply verbatim (swap `className` for `class` in `.astro` files).
 
 ### Color Token → Tailwind Class
 
@@ -198,7 +198,7 @@ Uses Tailwind's default `--spacing: 0.25rem` multiplier.
 
 ## 5. ASTRO + TAILWIND v4 (THIS PROJECT)
 
-The reference implementation. Astro 7, Tailwind v4 via `@tailwindcss/vite`, static output, i18n (`en` default sin prefijo, `es`), React solo como islas.
+The reference implementation. Astro 7, Tailwind v4 via `@tailwindcss/vite`, static output, i18n (`en` default sin prefijo, `es`). **Sin framework de UI**: no hay islas y nada hidrata; el único JS de cliente son los `<script>` de los propios `.astro`.
 
 ### 5.1 File Map
 
@@ -206,11 +206,13 @@ The reference implementation. Astro 7, Tailwind v4 via `@tailwindcss/vite`, stat
 |---|---|
 | Tokens, `@theme`, `@utility`, `dark` variant | `src/styles/global.css` |
 | Font loading config | `astro.config.mjs` (`fonts: [...]`) |
-| `<Font>` tags, `<head>` metadata | `src/components/BaseHead.astro` |
+| `<Font>` tags, `<head>` metadata | `src/components/layout/BaseHead.astro` |
 | Pre-paint theme script, `<body>` base classes | `src/layouts/Layout.astro` |
-| Theme switch (light/dark/system) | `src/components/ThemePicker.astro` |
+| Theme switch (light/dark/system) | `src/components/layout/ThemePicker.astro` |
 | Page shells | `src/layouts/Layout.astro`, `src/layouts/BlogPost.astro` |
 | UI strings (both locales) | `src/i18n/ui.ts` |
+| Botones (4 variantes de la Sección 2) | `src/components/shared/ButtonLink.astro` |
+| Rejilla de puntos interactiva | `src/components/shared/DotGrid.astro` |
 
 **Never** hardcode user-facing copy in a component: add the key to `src/i18n/ui.ts` for `en` **and** `es`, then `const t = useTranslations(getLangFromUrl(Astro.url))`. Labels ALL CAPS son estilo (`uppercase` en CSS), no texto — guarda la cadena en su capitalización natural.
 
@@ -331,6 +333,8 @@ Por eso los tokens se definen **una vez por modo sobre `:root` / `.dark`** y se 
   --nd-body: #1a1818;
   --nd-title: #000000;
   /* Saturated signals wash out on off-white — darkened. Red stays. */
+  --nd-accent: #2f7a41;
+  --nd-accent-subtle: rgba(47, 122, 65, 0.14);
   --nd-success: #2f7a41;
   --nd-warning: #856612;
   --nd-action: #b84e08;
@@ -354,6 +358,8 @@ Por eso los tokens se definen **una vez por modo sobre `:root` / `.dark`** y se 
   --nd-caption: #999999;
   --nd-body: #e8e8e8;
   --nd-title: #ffffff;
+  --nd-accent: #4a9e5c;
+  --nd-accent-subtle: rgba(74, 158, 92, 0.15);
   --nd-success: #4a9e5c;
   --nd-warning: #d4a843;
   --nd-action: #f16a0d;
@@ -409,10 +415,10 @@ Utilidades del sistema (idénticas a la sección 4, van en el mismo archivo):
 @utility font-nothing-code     { font-family: var(--font-mono); }
 @utility font-nothing-subtitle { font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
 @utility subtitle              { @apply font-nothing-subtitle uppercase; }
-@utility font-nothing-subtitle              { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
 
 /* Layout: `container` (80rem, gutter 1.5rem → 3rem desde 768px), `project-grid`
-   y `single-project-grid` — las áreas nombradas de la home y de un proyecto. */
+   y `single-project-grid` — las áreas nombradas de la home y de un proyecto.
+   OJO: `container` no lo aplica nadie por ti. Ver 5.4b. */
 
 /* Headings — Doto, fluid. Ver la tabla de tokens.md Sección 1. */
 @utility heading-64 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; line-height: 0.92; color: var(--color-title); font-size: clamp(48px, 11vw, 128px); }
@@ -441,7 +447,7 @@ Consecuencias para el diseño:
 3. **`data-theme` es para la UI del propio picker**, no para colorear. Se usa con `:global(html[data-theme='...'])` dentro de `<style>` scoped para marcar la opción activa antes de que corra el JS.
 4. **`color-scheme` ya está sincronizado** (`html` / `html.dark` en `global.css`). No lo redefinas por componente: mantiene scrollbars y controles nativos en el modo correcto.
 5. **El swap usa View Transitions** con fallback a `prefers-reduced-motion`. Los colores cruzan con fade — no añadas `transition-colors` global sobre `body`, duplicaría la animación.
-6. **Nada de flash.** Cualquier color que dependa del tema debe salir de una clase Tailwind resuelta por `.dark`, nunca de JS que corra después del primer paint.
+6. **Nada de flash.** Cualquier color que dependa del tema debe salir de una clase Tailwind resuelta por `.dark`, nunca de JS que corra después del primer paint. La única excepción es un `<canvas>`, que no admite clase de color — ver 5.4c.
 
 Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sistema):
 
@@ -449,27 +455,61 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 <body class="flex min-h-screen flex-col bg-surface text-body antialiased">
 ```
 
+### 5.4b El raíl no viene dado
+
+`Layout.astro` no envuelve nada: `main` es `grow` pelado. Cada página decide su raíl horizontal, y equivocarse **falla en silencio** — el texto simplemente se va al borde de la ventana.
+
+- Página de contenido normal: pide el raíl al layout.
+  ```astro
+  <Layout title={t('blog.title')} description={t('blog.description')} class="container py-12">
+  ```
+- Página que abre con hero: no pasa `class`. La `<section>` del hero sangra hasta el borde y mete un `container` **por dentro**, alrededor del texto, para que la copia siga alineada con el header y el footer. Todos los heroes de este sitio son a sangre.
+
+```astro
+<section class="relative overflow-hidden py-24">
+	<DotGrid />
+	<div class="container relative z-10 space-y-6">
+		<!-- el texto vuelve al raíl -->
+	</div>
+</section>
+```
+
+`relative` en la sección no es opcional: es la caja contra la que se mide cualquier decoración de fondo (la rejilla de puntos, una superficie tintada).
+
+### 5.4c Canvas y tema
+
+Un `<canvas>` no admite clase de color de Tailwind, así que un token no puede llegarle por la vía normal. El canal fiable es `color`:
+
+```astro
+<canvas class="dot-grid-canvas pointer-events-none absolute inset-0 text-disabled dark:text-outline" aria-hidden="true"></canvas>
+```
+
+```ts
+color = getComputedStyle(canvas).color; // siempre computa a rgb()
+
+new MutationObserver(repaint).observe(document.documentElement, { attributeFilter: ['class'] });
+```
+
+Tres razones para hacerlo así y no con una custom property:
+
+1. `getComputedStyle` sobre una custom property puede devolver un `var()` sin resolver, y `fillStyle` descarta un valor inválido **en silencio**: los puntos saldrían negros sin ningún error.
+2. Los píxeles de un canvas no siguen al token como lo hace una clase, así que el cambio de tema hay que repintarlo a mano. El hook es la clase de `<html>`, nunca `prefers-color-scheme`.
+3. Los tokens neutros no se corresponden uno a uno entre modos: `#c9c6c6` sobre `#f3f2f2` es casi invisible, por eso el par es `text-disabled dark:text-outline` y no el mismo token en ambos.
+
+Escala por `devicePixelRatio` (con tope en 2) o un punto de 1px sale borroso en retina.
+
 ### 5.5 Component Patterns (.astro)
 
 `class` en lugar de `className`; `class:list` para condicionales; `<style>` es scoped por defecto.
 
-**Primary button** (pill invertido — blanco sobre negro en dark, negro sobre blanco en light):
+**Botones — usa `shared/ButtonLink.astro`.** Las cuatro variantes de la Sección 2 (`primary`, `secondary`, `ghost`, `destructive`) y los tres tamaños ya están ahí. No repitas el markup: una clase suelta se separa de la spec en cuanto alguien toca una.
+
 ```astro
-<button
-	class="inline-flex items-center gap-2 rounded-full bg-title px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-surface transition-opacity duration-150 hover:opacity-80"
->
-	{t('cta.label')}
-</button>
+<ButtonLink href={localizedPath(lang, 'work')}>{t('home.viewWork')}</ButtonLink>
+<ButtonLink href={url} variant="secondary" size="sm">{t('work.visit')}</ButtonLink>
 ```
 
-**Secondary button** (outlined pill):
-```astro
-<button
-	class="inline-flex items-center gap-2 rounded-full border border-outline px-6 py-3 font-mono text-[13px] uppercase tracking-[0.06em] text-body transition-colors duration-150 hover:border-body"
->
-	{t('cta.secondary')}
-</button>
-```
+El `href` llega ya localizado: el componente vive en `shared/` y no sabe nada de i18n. Detecta solo si el enlace es externo, para poner `target` y `rel`.
 
 **Nav label** (activo / inactivo) — patrón para `Header.astro`:
 ```astro
@@ -511,14 +551,23 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 Los posts se renderizan con `@tailwindcss/typography`. Ata el plugin a los tokens en vez de a los grises por defecto, y usa `dark:prose-invert`:
 
 ```astro
-<div class="prose prose-neutral dark:prose-invert prose-headings:font-display prose-headings:tracking-[-0.02em] prose-a:text-action prose-a:no-underline hover:prose-a:underline max-w-none">
+<div class="prose prose-neutral dark:prose-invert prose-headings:font-nothing-dots prose-headings:tracking-[-0.02em] prose-a:text-action prose-a:no-underline hover:prose-a:underline max-w-none">
 	<slot />
 </div>
 ```
 
-### 5.7 React Islands
+### 5.7 JavaScript de cliente
 
-`Counter.tsx` y cualquier isla React siguen usando `className` y las mismas clases Tailwind — comparten `global.css`, así que los tokens ya están disponibles. No dupliques tokens en JS ni leas el tema con `useState` al montar: provocaría un salto visual. Si una isla necesita saber el modo, léelo de `document.documentElement.classList.contains('dark')` dentro de un efecto y solo para comportamiento, nunca para color.
+No hay framework: ninguna isla, nada que hidrate. El JS de cliente son los `<script>` de los `.astro`, que Astro empaqueta y —si son pequeños— inlinea en el HTML. Lo que comparten más de un componente vive en `src/scripts/`.
+
+Antes de alcanzar una librería, mira la plataforma. El menú móvil es un `popover`: el navegador le da top layer, Escape, cierre al hacer clic fuera, salir del orden de tabulación y devolver el foco al invocador, sin una línea de JS. La rejilla de puntos usa Pointer Events, que cubre ratón, lápiz y dedo con un solo par de listeners.
+
+Reglas cuando sí hace falta script:
+
+- **Nunca pintes color desde JS después del primer paint** (5.4 punto 6). La excepción es el canvas de 5.4c.
+- **Si algo necesita saber el modo**, léelo de `document.documentElement.classList.contains('dark')` y solo para comportamiento.
+- **Respeta `prefers-reduced-motion`** en cualquier animación, y compruébalo en tiempo de ejecución, no solo al montar.
+- **Un `<script>` de `.astro` corre una vez por página, no una por instancia.** Si el componente puede aparecer dos veces, recorre `querySelectorAll` en vez de `querySelector`.
 
 ### 5.8 Checks
 

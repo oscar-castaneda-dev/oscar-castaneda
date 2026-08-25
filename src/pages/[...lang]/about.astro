@@ -8,7 +8,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title={t('about.title')} description={t('about.description')}>
+<Layout title={t('about.title')} description={t('about.description')} class="container py-12">
 	<div class="mx-auto max-w-2xl">
 		<h1 class="text-3xl font-bold tracking-tight">{t('about.heading')}</h1>
 		<div class="prose prose-gray dark:prose-invert mt-6 max-w-none">

@@ -1,9 +1,14 @@
 # oscarcastaneda.dev
 
-Oscar Castaneda's personal site and blog: a static Astro 7 build (Tailwind v4, React only as
-islands) published at https://oscarcastaneda.dev. Bilingual — `en` is the default locale and
-carries no URL prefix, `es` lives under `/es/`. The content is a blog plus short daily notes,
-each collection split by locale.
+Oscar Castaneda's personal site and blog: a static Astro 7 build (Tailwind v4) published at
+https://oscarcastaneda.dev. Bilingual — `en` is the default locale and carries no URL prefix,
+`es` lives under `/es/`. The content is a blog, short daily notes and a work listing, each
+collection split by locale.
+
+No UI framework: there are no islands and nothing hydrates. The only client JavaScript is the
+handful of `<script>` blocks in `.astro` components — currently about 1 KB in total. Reach for
+a plain script and the platform (`popover`, `inert`, Pointer Events) before reaching for a
+framework; adding React back is a decision, not a detail.
 
 This is a personal site, not a product: it is one person writing in public. Prefer restraint
 over features, and copy that sounds like a person over marketing voice.
@@ -13,10 +18,13 @@ over features, and copy that sounds like a person over marketing voice.
 ```
 src/
 ├── components/
-│   ├── shared/      design-system primitives, unaware of this site: FormattedDate, Counter.tsx
-│   ├── layout/      the site shell: BaseHead, Header, Footer, LanguagePicker, ThemePicker
-│   ├── home/        landing sections: Hero, Intro, LatestPosts, LatestDaily
+│   ├── shared/      design-system primitives, unaware of this site: FormattedDate,
+│   │                ButtonLink, DotGrid
+│   ├── layout/      the site shell: BaseHead, Header, Footer, MobileMenu,
+│   │                LanguagePicker, ThemePicker
+│   ├── home/        landing sections: HomeHero, Intro, LatestPosts, LatestDaily
 │   ├── blog/        PostCard, PostMeta
+│   ├── work/        ProjectCard
 │   └── daily/       DailyNote
 │
 ├── pages/
@@ -25,13 +33,15 @@ src/
 │       ├── about.astro
 │       ├── blog/{index,[slug]}.astro
 │       ├── daily/{index,[slug]}.astro
+│       ├── work/index.astro
 │       └── rss.xml.js
 │
 ├── layouts/         Layout.astro (shell), BlogPost.astro (entry detail)
-├── content/         blog/{en,es}, daily/{en,es}
+├── content/         blog/{en,es}, daily/{en,es}, work/{en,es}
 ├── content.config.ts
 ├── i18n/            ui.ts, utils.ts
 ├── lib/             content.ts
+├── scripts/         dropdown.ts — client code shared by more than one component
 ├── styles/          global.css
 └── assets/
 ```
@@ -46,7 +56,8 @@ a folder under `content/`, a `components/<section>/`, and a key prefix in `src/i
 those four names identical.
 
 Components never live under `pages/`: every `.astro` there becomes a route. Pages compose,
-they don't implement — `index.astro` should read as a list of `<Hero />`, `<Intro />`, `<LatestPosts />`.
+they don't implement — `index.astro` should read as a list of `<HomeHero />`, `<Intro />`,
+`<LatestPosts />`.
 Import with the `@/` alias, not relative paths, so a move only touches the file that moved.
 Feature folders that are still empty carry no `.gitkeep`; they show up with their first component.
 
@@ -84,6 +95,28 @@ The rules that get broken most often, so they are worth repeating here:
 Tokens, utilities and the `dark` variant all live in `src/styles/global.css`. Change a colour
 there and nowhere else.
 
+### The rail is not given
+
+`Layout.astro` wraps nothing: `main` is bare `grow`. Every page decides its own horizontal
+rail, and getting it wrong fails silently — the text simply runs to the edge of the window.
+
+- A page of ordinary content asks for the rail: `<Layout title={…} description={…} class="container py-12">`.
+- A page that opens with a hero passes no `class`. The hero `<section>` then bleeds to the
+  window edge and puts a `container` **inside** itself around the text, so the copy still lines
+  up with the header and the footer. Every hero on this site is full-bleed.
+
+A full-bleed section that paints something behind its content — the dot grid, a tinted surface —
+needs `relative` on the section, since that is the box the decoration measures itself against.
+
+### Canvas and the theme
+
+A `<canvas>` takes no Tailwind colour class, so a token cannot reach it the usual way. Put the
+token on the element as `color` (`text-disabled dark:text-outline`), read it back with
+`getComputedStyle(canvas).color`, and repaint on theme change — a `MutationObserver` watching
+the `class` attribute of `<html>`. `getComputedStyle` on a custom property can hand back an
+unresolved `var()`, and `fillStyle` drops an invalid value in silence, so `color` is the
+reliable channel. See `shared/DotGrid.astro`.
+
 ## Copy and i18n
 
 Never hardcode user-facing text in a component. Add the key to `src/i18n/ui.ts` for **both**
@@ -111,7 +144,6 @@ Consult these guides before working on related tasks:
 
 - [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
 - [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
