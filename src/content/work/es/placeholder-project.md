@@ -2,8 +2,8 @@
 title: 'Proyecto de ejemplo'
 description: 'Una entrada de relleno para que el listado de Work tenga algo que mostrar. Sustitúyela por un proyecto real.'
 category: 'web'
-cover: '../../../assets/project-white.png'
-coverDark: '../../../assets/project-dark.png'
+cover: '../../../assets/placeholder-white.png'
+coverDark: '../../../assets/placeholder-dark.png'
 publishedDate: 2026-08-01
 role: 'Diseño y desarrollo'
 stack: ['Astro', 'TypeScript', 'Tailwind']

@@ -17,15 +17,15 @@ const [first, second, third, fourth] = (await getLocalizedEntries('work', lang))
 ---
 
 <section class="container project-grid mb-24">
-	{first && <ProjectCard entry={first} href={workHref} area="project1" featured />}
+	{first && <ProjectCard entry={first} href={workHref} area="project1" index={1} featured />}
 	<Experience />
 	<Role />
 	<Building />
 	<Location />
-	{second && <ProjectCard entry={second} href={workHref} area="project2" />}
+	{second && <ProjectCard entry={second} href={workHref} area="project2" index={2} />}
 	<Blog />
 	<Reading />
-	{third && <ProjectCard entry={third} href={workHref} area="project3" />}
-	{fourth && <ProjectCard entry={fourth} href={workHref} area="project4" />}
+	{third && <ProjectCard entry={third} href={workHref} area="project3" index={3} />}
+	{fourth && <ProjectCard entry={fourth} href={workHref} area="project4" index={4} />}
 	<Contact />
 </section>

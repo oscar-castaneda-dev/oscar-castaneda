@@ -2,8 +2,8 @@
 title: "Dropio"
 description: "A stand-in entry so the Work listing has something to render. Replace it with a real project."
 category: "web"
-cover: '../../../assets/project-white.png'
-coverDark: '../../../assets/project-dark.png'
+cover: '../../../assets/placeholder-white.png'
+coverDark: '../../../assets/placeholder-dark.png'
 publishedDate: 2026-08-01
 role: "Design and development"
 stack: ["Astro", "TypeScript", "Tailwind"]

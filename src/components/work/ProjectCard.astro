@@ -8,14 +8,17 @@ interface Props {
 	href: string;
 	/** The `grid-template-areas` name this card sits in. */
 	area: string;
+	/** Position in the listing, printed as `01`. */
+	index: number;
 	/** The lead card: bigger heading, and it asks the browser for a wider image. */
 	featured?: boolean;
 	class?: string;
 }
 
-const { entry, href, area, featured = false, class: className } = Astro.props;
-const { title, cover, coverDark, publishedDate } = entry.data;
+const { entry, href, area, index, featured = false, class: className } = Astro.props;
+const { title, category, cover, coverDark, publishedDate } = entry.data;
 
+const number = String(index).padStart(2, '0');
 const year = publishedDate.getFullYear();
 
 // Every card carries an image: an entry without a `cover` borrows the placeholder.
@@ -27,9 +30,9 @@ const sizes = featured
 ---
 
 {/*
-  At rest the card is the artwork and nothing else. The scrim and the caption
-  arrive with the pointer, so the grid reads as a wall of images until you go
-  looking for a name.
+  The card holds two states and nothing in between: the artwork, or the card
+  surface with the name on it. Hover cross-fades one into the other, so no scrim
+  is needed — the text never sits on the image, it replaces it.
 */}
 <a
 	href={href}
@@ -44,43 +47,37 @@ const sizes = featured
 	  the `dark:` variant, not one `<picture>` with `prefers-color-scheme`: the theme
 	  here is the `.dark` class, and a media query would ignore a manual choice.
 	*/}
-	<Image
-		src={image}
-		alt=""
-		sizes={sizes}
-		class:list={['absolute inset-0 size-full object-cover', coverDark && 'dark:hidden']}
-	/>
-	{
-		coverDark && (
-			<Image
-				src={coverDark}
-				alt=""
-				sizes={sizes}
-				class="absolute inset-0 hidden size-full object-cover dark:block"
-			/>
-		)
-	}
-
-	{/*
-	  Not chrome: a scrim over the image, so the caption keeps its contrast on any
-	  photo. Fixed black in both modes because it sits on the image, not on the surface.
-
-	  At rest the card is nothing but the artwork; the caption arrives with the
-	  pointer. `group-focus-visible` is what keeps that reachable from the keyboard.
-	*/}
-	<div
-		class="absolute inset-0 bg-gradient-to-t from-black/35 via-black/12 to-black/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
-	>
+	<div class="absolute inset-0 transition-opacity duration-300 group-hover:opacity-0 group-focus-visible:opacity-0">
+		<Image
+			src={image}
+			alt=""
+			sizes={sizes}
+			class:list={['absolute inset-0 size-full object-cover', coverDark && 'dark:hidden']}
+		/>
+		{
+			coverDark && (
+				<Image
+					src={coverDark}
+					alt=""
+					sizes={sizes}
+					class="absolute inset-0 hidden size-full object-cover dark:block"
+				/>
+			)
+		}
 	</div>
 
+	{/*
+	  Plain tokens: once the image is gone this is an ordinary card, so the type
+	  comes from the neutral ramp like everywhere else. `group-focus-visible` is
+	  what keeps the name reachable from the keyboard.
+	*/}
 	<div
-		class="relative flex h-full min-h-60 flex-col justify-end p-5 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+		class="relative flex h-full min-h-60 flex-col justify-between p-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
 	>
+		<p class="subtitle text-xs text-caption">{number}{category && ` — ${category}`}</p>
 		<div>
-			<h3 class:list={[featured ? 'heading-44' : 'heading-36', 'uppercase text-white']}>
-				{title}
-			</h3>
-			<p class="subtitle mt-2 text-xs text-white/70">{year}</p>
+			<h3 class:list={[featured ? 'heading-44' : 'heading-36', 'uppercase']}>{title}</h3>
+			<p class="subtitle mt-2 text-xs text-caption">{year}</p>
 		</div>
 	</div>
 </a>
