@@ -445,8 +445,16 @@ Consecuencias para el diseño:
 1. **Ambos modos son de primera clase.** Ningún componente se diseña "para dark y luego se aclara". Cada color va con su par `dark:`.
 2. **La clase `.dark` es el único hook.** Nunca escribas `@media (prefers-color-scheme: dark)` en un componente: rompería el override manual. El SO solo se consulta en el script pre-paint de `Layout.astro` y en el listener de `ThemePicker.astro`.
 3. **`data-theme` es para la UI del propio picker**, no para colorear. Se usa con `:global(html[data-theme='...'])` dentro de `<style>` scoped para marcar la opción activa antes de que corra el JS.
-4. **`color-scheme` ya está sincronizado** (`html` / `html.dark` en `global.css`). No lo redefinas por componente: mantiene scrollbars y controles nativos en el modo correcto.
-5. **El swap usa View Transitions** con fallback a `prefers-reduced-motion`. Los colores cruzan con fade — no añadas `transition-colors` global sobre `body`, duplicaría la animación.
+4. **`color-scheme` ya está sincronizado** (`html` / `html.dark` en `global.css`). No lo redefinas por componente: mantiene scrollbars y controles nativos en el modo correcto. Y no: `color-scheme` **no** afecta a lo que devuelve `prefers-color-scheme` — se midió en Chrome con los cinco valores y la media query siempre reporta el ajuste del SO.
+
+5. **El swap se funde con CSS, no con View Transitions.** El picker pone `.theme-switching` en `<html>`, la deja 300 ms y la quita; `global.css` arma con esa clase una `transition` de 300 ms sobre `background-color`, `border-color`, `color`, `fill` y `stroke` con `!important`, y la desarma al salir. Así los colores cruzan y **el clic nunca espera**: el desplegable se cierra y el tema se aplica de forma síncrona.
+
+   `startViewTransition` se probó y se descartó: suspende el renderizado de *todo* el documento mientras captura sus snapshots, así que el control queda rehén de la animación. Con el canvas a sangre del hero en pantalla ese parón llegaba al segundo largo — el clic entraba, el desplegable se cerraba, el tema cambiaba, y no se pintaba nada hasta que la transición soltaba. Una animación de color no puede costarle la respuesta a un control.
+
+   El `!important` es lo que pone a todos los elementos en el mismo reloj: sin él, los que ya llevan `transition-colors duration-150` llegan antes y el fundido se ve desigual. Y la clase es lo que acota el efecto al cambio deliberado — sin ella tendrías todo el sitio animando colores en cada hover y en la primera carga.
+
+   Un `<canvas>` no se funde solo: repinta durante la ventana del fundido (ver 5.4c) o sus colores saltarán mientras el resto cruza.
+
 6. **Nada de flash.** Cualquier color que dependa del tema debe salir de una clase Tailwind resuelta por `.dark`, nunca de JS que corra después del primer paint. La única excepción es un `<canvas>`, que no admite clase de color — ver 5.4c.
 
 Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sistema):
@@ -454,6 +462,23 @@ Base del documento (ya en `Layout.astro`, actualizar a tokens al aplicar el sist
 ```astro
 <body class="flex min-h-screen flex-col bg-surface text-body antialiased">
 ```
+
+### 5.4a El header va por encima
+
+```astro
+<header class="relative z-50 border-b border-border">
+```
+
+Los desplegables del header (idioma, tema) se abren hacia abajo, sobre la sección que sigue. Si esa sección posiciona su propio contenido con `z-10` —como hace un hero— y el desplegable también lleva `z-10`, **gana el hero por orden de DOM** y se traga las opciones de abajo. El fallo es cruel porque es parcial: las primeras opciones siguen respondiendo y solo la última queda muerta, así que parece un bug del control y no de la pila.
+
+Cuando algo de un desplegable no responda, no depures el JS: haz el hit test.
+
+```js
+const r = boton.getBoundingClientRect();
+document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+```
+
+Si eso no devuelve el botón, el problema es el apilamiento.
 
 ### 5.4b El raíl no viene dado
 
@@ -496,7 +521,13 @@ Tres razones para hacerlo así y no con una custom property:
 2. Los píxeles de un canvas no siguen al token como lo hace una clase, así que el cambio de tema hay que repintarlo a mano. El hook es la clase de `<html>`, nunca `prefers-color-scheme`.
 3. Los tokens neutros no se corresponden uno a uno entre modos: `#c9c6c6` sobre `#f3f2f2` es casi invisible, por eso el par es `text-disabled dark:text-outline` y no el mismo token en ambos.
 
-Escala por `devicePixelRatio` (con tope en 2) o un punto de 1px sale borroso en retina.
+Escala por `devicePixelRatio` (con tope en 2) o un punto de 1px sale borroso en retina. Y si lo escalas, **dale tamaño CSS explícito**:
+
+```css
+.dot-grid-canvas { width: 100%; height: 100%; }
+```
+
+Un `<canvas>` es un elemento reemplazado: con `absolute inset-0` a secas, `width: auto` no se resuelve al padre sino al tamaño intrínseco, que son los atributos `width`/`height` — los mismos que acabas de multiplicar por el dpr. La caja acaba midiendo el doble que la sección y los puntos se dibujan al doble de sus coordenadas, lejos del cursor. Parece que el componente no reacciona al ratón cuando en realidad reacciona en el sitio equivocado.
 
 ### 5.5 Component Patterns (.astro)
 

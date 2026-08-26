@@ -99,6 +99,27 @@ const modes = [
 		}
 	}
 
+	/** How long `.theme-switching` stays on, matching the CSS cross-fade. */
+	const CROSSFADE_MS = 300;
+	let clearSwitching: ReturnType<typeof setTimeout>;
+
+	/*
+	  The class is what arms the transition in `global.css`; it goes on just before
+	  the swap and comes off after. The click itself is never blocked — the control
+	  closes and commits at once, and only the colours take the 300ms.
+	*/
+	function crossfade(swap: () => void) {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			swap();
+			return;
+		}
+
+		root.classList.add('theme-switching');
+		swap();
+		clearTimeout(clearSwitching);
+		clearSwitching = setTimeout(() => root.classList.remove('theme-switching'), CROSSFADE_MS);
+	}
+
 	function apply(mode: Mode) {
 		root.dataset.theme = mode;
 		root.classList.toggle('dark', resolvesToDark(mode));
@@ -119,22 +140,12 @@ const modes = [
 		const mode = option?.dataset.mode as Mode | undefined;
 		if (!mode) return;
 
-		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		const commit = () => {
-			apply(mode);
-			picker.open = false;
-		};
-
-		// `startViewTransition` cross-fades the whole page instead of snapping colours.
-		if (document.startViewTransition && !reducedMotion) {
-			document.startViewTransition(commit);
-		} else {
-			commit();
-		}
+		crossfade(() => apply(mode));
+		picker.open = false;
 	});
 
 	// While on "system", follow the OS if it changes with the page still open.
 	prefersDark.addEventListener('change', () => {
-		if (currentMode() === 'system') apply('system');
+		if (currentMode() === 'system') crossfade(() => apply('system'));
 	});
 </script>

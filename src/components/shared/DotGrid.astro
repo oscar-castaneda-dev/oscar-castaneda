@@ -18,6 +18,11 @@ const { fade = true, class: className } = Astro.props;
 	]}></canvas>
 
 <style>
+	.dot-grid-canvas {
+		width: 100%;
+		height: 100%;
+	}
+
 	.dot-grid-canvas[data-fade] {
 		mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
 	}
@@ -45,6 +50,23 @@ const { fade = true, class: className } = Astro.props;
 
 	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 	const repaints: (() => void)[] = [];
+
+	const FOLLOW_MS = 400;
+
+	let followUntil = 0;
+	let following = 0;
+
+	const followTheme = () => {
+		followUntil = performance.now() + FOLLOW_MS;
+		if (following) return;
+
+		const step = () => {
+			for (const repaint of repaints) repaint();
+			following = performance.now() < followUntil ? requestAnimationFrame(step) : 0;
+		};
+
+		following = requestAnimationFrame(step);
+	};
 
 	function setup(canvas: HTMLCanvasElement) {
 		const parent = canvas.parentElement;
@@ -166,8 +188,8 @@ const { fade = true, class: className } = Astro.props;
 	}
 
 	if (repaints.length) {
-		new MutationObserver(() => {
-			for (const repaint of repaints) repaint();
-		}).observe(document.documentElement, { attributeFilter: ['class'] });
+		new MutationObserver(followTheme).observe(document.documentElement, {
+			attributeFilter: ['class'],
+		});
 	}
 </script>

@@ -100,6 +100,40 @@ html.dark {
   color-scheme: dark;
 }
 
+/*
+  Theme cross-fade. Only while `.theme-switching` is on <html>, which the picker
+  adds for the length of the swap and then removes — so colours animate on a
+  deliberate theme change and nowhere else: not on load, not on hover.
+
+  Deliberately CSS and not `startViewTransition`: a view transition suspends
+  rendering for the whole document while it snapshots, which holds the click
+  itself hostage. Here the control answers immediately and the colour catches up.
+
+  `!important` is what puts every element on the same clock; without it the
+  utilities that already carry `transition-colors duration-150` would arrive
+  early and the swap would look ragged.
+*/
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    fill 300ms ease,
+    stroke 300ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching,
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition: none !important;
+  }
+}
+
 @utility container {
   width: 100%;
   max-width: 80rem;
@@ -259,10 +293,3 @@ html.dark {
   }
 }
 
-/* The theme swap is cross-faded via the View Transitions API — honour reduced motion. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-}

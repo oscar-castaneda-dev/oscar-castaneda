@@ -17,7 +17,12 @@ const links = [
 const current = Astro.url.pathname;
 ---
 
-<header class="border-b border-border">
+{/*
+  The header stacks above the page: its dropdowns open downward over whatever
+  section follows, and a hero that positions its own content would otherwise
+  win on DOM order at the same z-index and swallow the lower options.
+*/}
+<header class="relative z-50 border-b border-border">
 	<div class="container flex items-stretch justify-between">
 		<!-- LOGO -->
 		<a
