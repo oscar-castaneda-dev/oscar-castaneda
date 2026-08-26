@@ -1,0 +1,34 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+const socials = [
+	{ label: 'github', href: 'https://github.com/oscar-castaneda-dev' },
+	{ label: 'twitter', href: 'https://x.com/iamoscar' },
+];
+---
+
+<GridCard area="contact">
+	<p class="subtitle text-xs text-caption">{t('home.grid.contact')}</p>
+	<div>
+		<h3 class="heading-36 uppercase">{t('home.grid.contactTitle')}</h3>
+		<ul class="mt-4 flex flex-col gap-1">
+			{
+				socials.map(({ label, href }) => (
+					<li>
+						<a
+							href={href}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="subtitle text-xs text-caption transition-colors duration-150 hover:text-title"
+						>
+							[ {label} ]
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</GridCard>

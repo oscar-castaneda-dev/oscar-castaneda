@@ -1,0 +1,28 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, localizedPath, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+{/* Indigo is the writing territory. */}
+<GridCard area="blog" tone="indigo" href={localizedPath(lang, 'blog')}>
+	<p class="subtitle text-xs text-indigo-muted">{t('home.grid.writing')}</p>
+	<div>
+		<h3 class="heading-36 uppercase">{t('home.grid.writingTitle')}</h3>
+		<div class="mt-2 flex items-center justify-between gap-4">
+			<p class="subtitle text-xs text-indigo-muted">{t('home.grid.writingMeta')}</p>
+			<svg
+				class="size-4 shrink-0 text-indigo-muted"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				aria-hidden="true"
+			>
+				<path d="M7 17 17 7M7 7h10v10" stroke-linecap="square"></path>
+			</svg>
+		</div>
+	</div>
+</GridCard>

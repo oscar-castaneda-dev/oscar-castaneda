@@ -1,0 +1,37 @@
+---
+/**
+ * The one live signal on a screen: something is running right now.
+ * Green is the accent, so exactly one of these belongs on a page.
+ */
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={['status-dot relative flex size-2 shrink-0', className]} aria-hidden="true">
+	<span class="status-dot-ping absolute inset-0 rounded-full bg-accent opacity-60"></span>
+	<span class="relative size-2 rounded-full bg-accent"></span>
+</span>
+
+<style>
+	/* Percussive, not fluid: the ping ticks out and restarts, it never breathes. */
+	.status-dot-ping {
+		animation: status-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+	}
+
+	@keyframes status-ping {
+		75%,
+		100% {
+			transform: scale(2.4);
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.status-dot-ping {
+			animation: none;
+		}
+	}
+</style>

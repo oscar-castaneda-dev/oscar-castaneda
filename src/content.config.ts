@@ -33,10 +33,16 @@ const daily = defineCollection({
 const work = defineCollection({
 	// One file per project, grouped by language like the other two.
 	loader: glob({ base: './src/content/work', pattern: '**/*.md' }),
-	schema: () =>
+	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			// The one-word kind of thing this is — `web`, `app`. Shown on the home grid card.
+			category: z.string().optional(),
+			// Optional: the home grid card falls back to the dot-matrix motif without it.
+			cover: z.optional(image()),
+			// The same artwork redrawn for the dark theme. Without it `cover` serves both.
+			coverDark: z.optional(image()),
 			// Sorted by this, newest first — same contract as blog and daily.
 			publishedDate: z.coerce.date(),
 			role: z.string().optional(),

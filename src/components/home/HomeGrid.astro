@@ -1,0 +1,31 @@
+---
+import Blog from '@/components/home/Blog.astro';
+import Building from '@/components/home/Building.astro';
+import Contact from '@/components/home/Contact.astro';
+import Experience from '@/components/home/Experience.astro';
+import Location from '@/components/home/Location.astro';
+import Reading from '@/components/home/Reading.astro';
+import Role from '@/components/home/Role.astro';
+import ProjectCard from '@/components/work/ProjectCard.astro';
+import { getLangFromUrl, localizedPath } from '@/i18n/utils';
+import { getLocalizedEntries } from '@/lib/content';
+
+const lang = getLangFromUrl(Astro.url);
+const workHref = localizedPath(lang, 'work');
+
+const [first, second, third, fourth] = (await getLocalizedEntries('work', lang)).slice(0, 4);
+---
+
+<section class="container project-grid mb-24">
+	{first && <ProjectCard entry={first} href={workHref} area="project1" featured />}
+	<Experience />
+	<Role />
+	<Building />
+	<Location />
+	{second && <ProjectCard entry={second} href={workHref} area="project2" />}
+	<Blog />
+	<Reading />
+	{third && <ProjectCard entry={third} href={workHref} area="project3" />}
+	{fourth && <ProjectCard entry={fourth} href={workHref} area="project4" />}
+	<Contact />
+</section>

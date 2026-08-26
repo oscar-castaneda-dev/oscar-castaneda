@@ -1,0 +1,14 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<GridCard area="location">
+	<p class="subtitle text-xs text-caption">{t('home.grid.basedIn')}</p>
+	<div>
+		<h3 class="heading-44 uppercase">{t('home.grid.locationShort')}</h3>
+		<p class="subtitle text-xs text-caption">{t('home.location')}</p>
+	</div>
+</GridCard>

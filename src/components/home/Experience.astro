@@ -1,0 +1,18 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+
+/** First line of code written for money. The tile counts up on its own from here. */
+const CAREER_START = 2012;
+const years = new Date().getFullYear() - CAREER_START;
+---
+
+<GridCard area="experience">
+	<p class="subtitle text-xs text-caption">{t('home.grid.experience')}</p>
+	<div>
+		<h3 class="heading-48">{years}</h3>
+		<p class="subtitle text-xs text-caption">{t('home.grid.years')}</p>
+	</div>
+</GridCard>

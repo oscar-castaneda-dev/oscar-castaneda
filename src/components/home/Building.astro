@@ -1,0 +1,20 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import StatusDot from '@/components/shared/StatusDot.astro';
+import { getLangFromUrl, localizedPath, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+{/* Green is the building territory, and the dot is the one live signal on the page. */}
+<GridCard area="building" tone="green" href={localizedPath(lang, 'work')}>
+	<div class="flex items-center gap-2">
+		<StatusDot />
+		<p class="subtitle text-xs text-green-muted">{t('home.grid.building')}</p>
+	</div>
+	<div>
+		<h3 class="heading-36 uppercase">{t('home.grid.buildingTitle')}</h3>
+		<p class="subtitle mt-2 text-xs text-green-muted">{t('home.grid.buildingMeta')}</p>
+	</div>
+</GridCard>

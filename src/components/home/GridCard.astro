@@ -1,0 +1,49 @@
+---
+/**
+ * One tile of the home grid. It only knows how to be a box in a named grid area:
+ * the content is a slot, and `tone` picks the territory it belongs to.
+ *
+ * Section palettes mark territory, not text — a tinted tile still writes its
+ * heading in the neutral ramp.
+ */
+const tones = {
+	neutral: {
+		base: 'bg-card border-border',
+		hover: 'hover:border-outline',
+	},
+	green: {
+		base: 'bg-green-surface border-green-border',
+		hover: 'hover:border-green-muted',
+	},
+	indigo: {
+		base: 'bg-indigo-surface border-indigo-border',
+		hover: 'hover:border-indigo-muted',
+	},
+} as const;
+
+interface Props {
+	/** The `grid-template-areas` name this tile sits in. */
+	area: string;
+	href?: string;
+	tone?: keyof typeof tones;
+	class?: string;
+}
+
+const { area, href, tone = 'neutral', class: className } = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+const { base, hover } = tones[tone];
+---
+
+<Tag
+	href={href}
+	style={`grid-area: ${area}`}
+	class:list={[
+		'flex min-h-40 flex-col justify-between rounded-xl border p-5',
+		base,
+		href && `${hover} transition-colors duration-150`,
+		className,
+	]}
+>
+	<slot />
+</Tag>

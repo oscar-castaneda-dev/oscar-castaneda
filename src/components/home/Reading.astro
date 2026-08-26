@@ -1,0 +1,15 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<GridCard area="reading">
+	<p class="subtitle text-xs text-caption">{t('home.grid.reading')}</p>
+	<div>
+		<p class="subtitle text-xs text-caption">{t('home.grid.readingTopic')}</p>
+		<h3 class="heading-36 mt-2 uppercase">{t('home.grid.readingTitle')}</h3>
+		<p class="mt-2 text-sm text-body">{t('home.grid.readingAuthor')}</p>
+	</div>
+</GridCard>

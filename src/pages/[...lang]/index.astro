@@ -1,4 +1,5 @@
 ---
+import HomeGrid from '@/components/home/HomeGrid.astro';
 import HomeHero from '@/components/home/HomeHero.astro';
 import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl, getLangStaticPaths, useTranslations } from '@/i18n/utils';
@@ -11,4 +12,5 @@ const t = useTranslations(lang);
 
 <Layout title={t('site.title')} description={t('site.description')}>
 	<HomeHero />
+	<HomeGrid />
 </Layout>

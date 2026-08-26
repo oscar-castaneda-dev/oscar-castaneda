@@ -1,0 +1,11 @@
+---
+import GridCard from '@/components/home/GridCard.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const t = useTranslations(getLangFromUrl(Astro.url));
+---
+
+<GridCard area="role">
+	<p class="subtitle text-xs text-caption">{t('home.grid.currentRole')}</p>
+	<h3 class="heading-36 uppercase">{t('home.role')}</h3>
+</GridCard>
