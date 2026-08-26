@@ -1,7 +1,7 @@
 ---
 title: 'Placeholder Project'
 description: 'A stand-in entry so the Work listing has something to render. Replace it with a real project.'
-pubDate: 2026-08-01
+publishedDate: 2026-08-01
 role: 'Design and development'
 stack: ['Astro', 'TypeScript', 'Tailwind']
 url: 'https://example.com'

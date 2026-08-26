@@ -7,7 +7,7 @@ import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, publishedDate, updatedDate, heroImage } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
@@ -30,7 +30,7 @@ const t = useTranslations(lang);
 		<header class="border-b border-border pb-6">
 			<h1 class="heading-44">{title}</h1>
 			<p class="mt-6 font-nothing-subtitle text-xs text-caption">
-				<FormattedDate date={pubDate} />
+				<FormattedDate date={publishedDate} />
 				{
 					updatedDate && (
 						<span>

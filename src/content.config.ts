@@ -10,8 +10,8 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
+			// Written as a plain ISO date; every locale formats it at render time.
+			publishedDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
 		}),
@@ -24,9 +24,9 @@ const daily = defineCollection({
 		z.object({
 			// A note is allowed to be untitled — the date is its heading then.
 			title: z.string().optional(),
-			description: z.string().optional(),
-			pubDate: z.coerce.date(),
-			tags: z.array(z.string()).default([]),
+			// The standfirst a listing shows in place of the body.
+			excerpt: z.string().optional(),
+			publishedDate: z.coerce.date(),
 		}),
 });
 
@@ -38,7 +38,7 @@ const work = defineCollection({
 			title: z.string(),
 			description: z.string(),
 			// Sorted by this, newest first — same contract as blog and daily.
-			pubDate: z.coerce.date(),
+			publishedDate: z.coerce.date(),
 			role: z.string().optional(),
 			stack: z.array(z.string()).default([]),
 			url: z.string().url().optional(),

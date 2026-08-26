@@ -18,6 +18,8 @@ export async function GET(context) {
 		site: context.site,
 		items: posts.map((post) => ({
 			...post.data,
+			// The feed spells this field its own way; ours is `publishedDate`.
+			pubDate: post.data.publishedDate,
 			link: getRelativeLocaleUrl(lang, `blog/${getEntrySlug(post)}`),
 		})),
 		customData: `<language>${lang}</language>`,

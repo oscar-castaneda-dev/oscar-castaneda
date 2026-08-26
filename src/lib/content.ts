@@ -17,6 +17,6 @@ export async function getLocalizedEntries<C extends LocalizedCollection>(
     id.startsWith(`${lang}/`),
   );
   return entries.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf(),
   );
 }

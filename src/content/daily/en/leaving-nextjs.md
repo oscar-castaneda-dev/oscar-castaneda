@@ -1,8 +1,7 @@
 ---
 title: "Leaving Next.js"
-description: "Leaving Next.js and migrating this site to Astro and my own server."
-pubDate: "Aug 24 2026"
-tags: ["unknow"]
+excerpt: "Leaving Next.js and migrating this site to Astro and my own server."
+publishedDate: 2026-08-24
 ---
 
 Today, I migrated this website from Next.js to Astro and, while I was at it, stopped hosting it on Vercel and moved it to my own server.
@@ -13,7 +12,7 @@ I think a lot of the solutions we build for the web don't necessarily need a fra
 
 For this site, I wanted something simpler, with fewer abstractions and more control over how it's built and hosted.
 
-This project is open source, and you can find all the code [here](<(https://github.com/oscar-castaneda-dev/oscar-castaneda)>).
+This project is open source, and you can find all the code [here](https://github.com/oscar-castaneda-dev/oscar-castaneda).
 
 The original project built with Next.js will also remain public [here](https://github.com/oscar-castaneda-dev/oscar-castaneda-website), in case anyone wants to check it out or use it as a reference.
 

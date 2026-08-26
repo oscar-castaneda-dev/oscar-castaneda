@@ -1,8 +1,7 @@
 ---
 title: "Leaving Next.js"
-description: "Dejando Next.js y migrando este sitio a Astro y a mi propio servidor."
-pubDate: "Aug 24 2026"
-tags: ["unknow"]
+excerpt: "Dejando Next.js y migrando este sitio a Astro y a mi propio servidor."
+publishedDate: 2026-08-24
 ---
 
 El día de hoy migré esta página web de Next.js a Astro y, de paso, dejé de alojarla en Vercel para comenzar a servirla desde mi propio servidor.

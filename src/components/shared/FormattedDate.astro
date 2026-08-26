@@ -9,12 +9,15 @@ const { date } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 ---
 
-<time datetime={date.toISOString()}>
+<time datetime={date.toISOString().slice(0, 10)}>
 	{
+		/* Frontmatter carries a plain ISO date, parsed as UTC midnight: format it in
+		   UTC too, or a browser west of Greenwich renders the day before. */
 		date.toLocaleDateString(lang, {
 			year: 'numeric',
-			month: 'short',
+			month: 'long',
 			day: 'numeric',
+			timeZone: 'UTC',
 		})
 	}
 </time>

@@ -7,7 +7,7 @@ import FormattedDate from '@/components/shared/FormattedDate.astro';
 interface Props {
 	entry: CollectionEntry<'daily'>;
 	headingLevel?: 'h1' | 'h2';
-	/** Listings show the note's description; the note's own page shows the body. */
+	/** Listings show the note's excerpt; the note's own page shows the body. */
 	summary?: boolean;
 }
 
@@ -17,7 +17,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const Content = summary ? null : (await render(entry)).Content;
 const href = localizedPath(lang, `daily/${getEntrySlug(entry)}`);
-const { title, pubDate, tags, description } = entry.data;
+const { title, publishedDate, excerpt } = entry.data;
 ---
 
 <article class="border-b border-gray-200 py-6 last:border-0 dark:border-gray-800">
@@ -28,24 +28,19 @@ const { title, pubDate, tags, description } = entry.data;
 				title={t('daily.permalink')}
 				class="hover:text-blue-600 dark:hover:text-blue-400"
 			>
-				{title ?? <FormattedDate date={pubDate} />}
+				{title ?? <FormattedDate date={publishedDate} />}
 			</a>
 		</Heading>
-		<p class="mt-1 flex flex-wrap items-baseline gap-x-3 text-sm text-gray-500 dark:text-gray-400">
-			{/* An untitled note already shows its date as the heading. */}
-			{title && <FormattedDate date={pubDate} />}
-			{
-				tags.length > 0 && (
-					<span class="flex flex-wrap gap-2">
-						{tags.map((tag) => (
-							<span class="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">#{tag}</span>
-						))}
-					</span>
-				)
-			}
-		</p>
+		{/* An untitled note already shows its date as the heading. */}
+		{
+			title && (
+				<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+					<FormattedDate date={publishedDate} />
+				</p>
+			)
+		}
 	</header>
-	{summary && description && <p class="mt-3 text-gray-600 dark:text-gray-400">{description}</p>}
+	{summary && excerpt && <p class="mt-3 text-gray-600 dark:text-gray-400">{excerpt}</p>}
 	{
 		Content && (
 			<div class="prose prose-gray dark:prose-invert mt-3 max-w-none">

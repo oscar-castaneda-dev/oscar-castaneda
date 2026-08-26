@@ -1,7 +1,7 @@
 ---
 title: "Primera publicación"
 description: "Lorem ipsum dolor sit amet"
-pubDate: "Jul 08 2022"
+publishedDate: 2022-07-08
 heroImage: "../../../assets/blog-placeholder.jpg"
 ---
 

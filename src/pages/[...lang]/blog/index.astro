@@ -36,7 +36,7 @@ const posts = await getLocalizedEntries('blog', lang);
 								{post.data.title}
 							</h2>
 							<p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-								<FormattedDate date={post.data.pubDate} />
+								<FormattedDate date={post.data.publishedDate} />
 							</p>
 							<p class="mt-2 text-gray-600 dark:text-gray-400">{post.data.description}</p>
 						</a>

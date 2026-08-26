@@ -25,12 +25,14 @@ const entry = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 // An untitled note falls back to its date, formatted for the current locale.
-const title = entry.data.title ?? entry.data.pubDate.toLocaleDateString(lang, { dateStyle: 'long' });
+const title =
+	entry.data.title ??
+	entry.data.publishedDate.toLocaleDateString(lang, { dateStyle: 'long', timeZone: 'UTC' });
 ---
 
 <Layout
 	title={`${title} | ${t('daily.title')}`}
-	description={entry.data.description ?? t('daily.description')}
+	description={entry.data.excerpt ?? t('daily.description')}
 	class="container py-12"
 >
 	<div class="mx-auto max-w-2xl">
